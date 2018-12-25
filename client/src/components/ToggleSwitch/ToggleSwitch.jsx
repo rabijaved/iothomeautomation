@@ -18,26 +18,30 @@ class ToggleSwitch extends Component {
   postToServer(switchName, switchState, switchAction){
   
     this.callBackendAPI(switchName, switchState, switchAction)
-      .then(res => this.setState({checked: (res.switchState === 'true')}))
+      .then(res => this.setState({checked: (res.jstate === 'true')}))
       .catch(err => console.log(err));
 
   }
 
   callBackendAPI = async (switchName, switchState, switchAction) => {
   
-    var getUrl = '/express_backend?switchName='+switchName + '&switchState='+switchState + '&switchAction='+switchAction;
-    const response = await fetch(getUrl)
-    const body = await response.json();
+    var getUrl = '/express_backend?jname='+switchName + '&jstate='+switchState + '&jaction='+switchAction;
+    const response = await fetch(getUrl);
 
-    if (response.status !== 200) {
-      throw Error(body.message) 
+    var body;
+    if (response.status === 200) {
+
+      body = await response.json();
+    
+    } else{
+      body = {jstate: !this.state.checked};
     }
     return body;
   };
  
  
   handleChange(checked, event,id) {
-  	
+
     this.postToServer(id,checked,'set');
     
   }

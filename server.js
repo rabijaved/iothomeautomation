@@ -11,17 +11,11 @@ const switch2 = new Gpio(15, 'out');
 const switch3 = new Gpio(17, 'out');
 const switch4 = new Gpio(18, 'out');
 
-var myTemperature = 0;
-var myHumidity = 0;
+var myTempHum = '';
 
 function getDHT11Reading(){
 
-	var contents = fs.readFileSync('dht11_output', 'utf8');
-
-	var res = contents.split(",");
-
-	myTemperature = res[1];
-	myHumidity = res[0];
+	myTempHum = fs.readFileSync('dht11_output', 'utf8');
 
 }
 
@@ -43,6 +37,9 @@ function getState(sName){
 	var sState = 'false';
 
         switch(sName) {
+          case 'dht11':
+            sState = myTempHum;
+          	break;
           case 'switch1':
             if(switch1.readSync() == 1) sState = 'true';
             break;
@@ -91,14 +88,14 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // create a GET route
 app.get('/express_backend', (req, res) => {
-  var switchName = req.query['switchName'];
-  var switchState = req.query['switchState'];
-  var switchAction = req.query['switchAction'];
+  var jName = req.query['jname'];
+  var jState = req.query['jstate'];
+  var jAction = req.query['jaction'];
 
-  console.log(switchAction+': Recieved trigger for: ' + switchName + ' ,State: ' + switchState);
+  console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState);
 
-  if(switchAction == "set") setSwitch(switchState, switchName);
-  else if(switchAction == "get") switchState = getState(switchName);
+  if(jAction == "set") setSwitch(jState, jName);
+  else if(jAction == "get") jState = getState(jName);
 
-  res.send({ switchState: switchState, switchName: switchName });
+  res.send({ jstate: jState, jname: jName });
 });

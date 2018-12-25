@@ -5,8 +5,8 @@ import Copyright from "@material-ui/icons/Copyright";
 import Notifications from "@material-ui/icons/Notifications";
 // core components/views
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
-import NotificationsPage from "views/Notifications/Notifications.jsx";
 import Switch from "views/Switch/Switch.jsx";
+import DHT11 from "views/DHT11/DHT11.jsx";
 
 const dashboardRoutes = [
   {
@@ -17,11 +17,11 @@ const dashboardRoutes = [
     component: DashboardPage
   },
   {
-    path: "/notifications",
-    sidebarName: "Notifications",
-    navbarName: "Notifications",
+    path: "/dht11",
+    sidebarName: "Temperature",
+    navbarName: "Temperature",
     icon: Notifications,
-    component: NotificationsPage
+    component: DHT11
   },
   { path: "/switch",
     sidebarName: "Switch",
