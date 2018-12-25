@@ -5,7 +5,8 @@
   "main": ".eslintrc.js",
   "dependencies": {
     "express": "^4.16.4",
-    "onoff": "^3.2.2"
+    "onoff": "^3.2.2",
+    "sqlite3": "^4.0.4"
   },
   "devDependencies": {},
   "scripts": {

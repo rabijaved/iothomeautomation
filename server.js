@@ -5,6 +5,10 @@ const Gpio = require('onoff').Gpio;
 const app = express();
 const port = process.env.PORT || 5000;
 
+//Set up database
+var sqlite3 = require('sqlite3').verbose();  
+var db = new sqlite3.Database('./SensorData.db'); 
+
 //set up switches
 const switch1 = new Gpio(14, 'out');
 const switch2 = new Gpio(15, 'out');
@@ -12,6 +16,7 @@ const switch3 = new Gpio(17, 'out');
 const switch4 = new Gpio(18, 'out');
 
 var myTempHum = '';
+var setDbDelay = 0;
 
 function getDHT11Reading(){
 
@@ -25,7 +30,18 @@ function logReadings10Seconds() {
     setTimeout(() => {
 
 	getDHT11Reading();
-        logReadings10Seconds();
+
+	if(setDbDelay >= 30) {
+
+		var tem = myTempHum.split(",");
+
+		db.run("INSERT INTO DHT11(TEMP, HUMID,DATECREATED) VALUES (" + tem[1]+ "," + tem[0]+ ",datetime('now','localtime'))");  
+
+		setDbDelay = 0;
+	}
+
+	setDbDelay++;
+	logReadings10Seconds();
 
     }, 10000)
 
