@@ -31,7 +31,7 @@ function logReadings10Seconds() {
 
 	getDHT11Reading();
 
-	if(setDbDelay >= 30) {
+	if(setDbDelay >= 90) {
 
 		var tem = myTempHum.split(",");
 

@@ -7,7 +7,28 @@ import GridItem from "components/Grid/GridItem.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
+import CardBody from "components/Card/CardBody.jsx";
+import CardFooter from "components/Card/CardFooter.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
+import ArrowUpward from "@material-ui/icons/ArrowUpward";
+import AccessTime from "@material-ui/icons/AccessTime";
+// react plugin for creating charts
+import ChartistGraph from "react-chartist";
+
+
+
+// ##############################
+// // // javascript library for creating charts
+// #############################
+var Chartist = require("chartist");
+
+// ##############################
+// // // variables used to create animation on charts
+// #############################
+var delays = 80,
+  durations = 500;
+var delays2 = 80,
+  durations2 = 500;
 
 
 const styles = {
@@ -28,6 +49,64 @@ const styles = {
     textDecoration: "none"
   }
 };
+
+
+
+// ##############################
+// // // Temperature Chart
+// #############################
+
+const temperatureChart = {
+  data: {
+    labels: ["M", "T", "W", "T", "F", "S", "S"],
+    series: [[12, 17, 7, 17, 23, 18, 38]]
+  },
+  options: {
+    lineSmooth: Chartist.Interpolation.cardinal({
+      tension: 10
+    }),
+    low: 0,
+    high: 45, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+    chartPadding: {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0
+    }
+  },
+  // for animation
+  animation: {
+    draw: function(data) {
+      if (data.type === "line" || data.type === "area") {
+        data.element.animate({
+          d: {
+            begin: 600,
+            dur: 700,
+            from: data.path
+              .clone()
+              .scale(1, 0)
+              .translate(0, data.chartRect.height())
+              .stringify(),
+            to: data.path.clone().stringify(),
+            easing: Chartist.Svg.Easing.easeOutQuint
+          }
+        });
+      } else if (data.type === "point") {
+        data.element.animate({
+          opacity: {
+            begin: (data.index + 1) * delays,
+            dur: durations,
+            from: 0,
+            to: 1,
+            easing: "ease"
+          }
+        });
+      }
+    }
+  }
+};
+
+
 
 class DHT11 extends Component {
   
@@ -89,6 +168,7 @@ componentWillUnmount() {
 
 
   render() {
+  const { classes } = this.props;
   return (
     <div>
       <GridContainer>
@@ -123,6 +203,28 @@ componentWillUnmount() {
           </Card>
         </GridItem>
       </GridContainer>
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card chart>
+              <CardHeader color="warning">
+                <ChartistGraph
+                  className="ct-chart"
+                  data={temperatureChart.data}
+                  type="Line"
+                  options={temperatureChart.options}
+                  listener={temperatureChart.animation}
+                />
+              </CardHeader>
+              <CardBody>
+                <h4 className={classes.cardTitle}>Temperature</h4>
+                <p className={classes.cardCategory}>
+                  <span className={classes.successText}>
+                  </span>{" "}
+                </p>
+              </CardBody>
+            </Card>
+          </GridItem>
+       </GridContainer>
     </div>
   );
 }
