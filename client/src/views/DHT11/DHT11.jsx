@@ -11,26 +11,13 @@ import CardIcon from "components/Card/CardIcon.jsx";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 
-import Popper from '@material-ui/core/Popper';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
-
-import classNames from "classnames";
 // @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
 import MenuList from "@material-ui/core/MenuList";
 import MenuItem from "@material-ui/core/MenuItem";
-import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Hidden from "@material-ui/core/Hidden";
-import Poppers from "@material-ui/core/Popper";
-// @material-ui/icons
-import Notifications from "@material-ui/icons/Notifications";
-
-
-import dropdownStyle from "assets/jss/material-dashboard-react/dropdownStyle.jsx";
+import Popper from '@material-ui/core/Popper';
+import Button from '@material-ui/core/Button';
+import Fade from '@material-ui/core/Fade';
 
 // ##############################
 // // // javascript library for creating charts
@@ -40,18 +27,20 @@ var Chartist = require("chartist");
 // ##############################
 // // // variables used to create animation on charts
 // #############################
-var delays = 80,
+var delays = 20,
 durations = 500;
+
 
 class DHT11 extends Component {
   
   constructor() {
     super();
-    this.state = {myTemp: 0,myHumid: 0, anchorEl: null,open: false, tempSelected: 'Day', chartData: []};
+    this.state = {myTemp: 0,myHumid: 0, anchorEl: null,open: false, tempSelected: 'Day', temperatureData: {labels: [],series: []}, humidityData: {labels: [],series: []}};
   }
   
   componentDidMount(){
-    this.postToServer('dht11','','get');
+    this.postToServer('dht11');
+    this.postToServer('dht11graph');
     this.logReadings1Minute();
   }
   
@@ -63,42 +52,30 @@ class DHT11 extends Component {
   // // // Temperature Chart
   // #############################
   
-  temperatureChart= {
-    data: {
-      labels: ["M", "T", "W", "T", "F", "S", "S"],
-      series: [[12, 17, 7, 17, 23, 18, 38]]
-    },
+
+  dht11Chart= {
     options: {
       lineSmooth: Chartist.Interpolation.cardinal({
         tension: 10
       }),
-      low: 0,
-      high: 45, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
       chartPadding: {
         top: 0,
         right: 0,
         bottom: 0,
         left: 0
-      }
+      },
+      height: '300px',
+      showPoint: false,
+      axisX: {
+	 labelInterpolationFnc: function(value, index) {
+	 return index % 5 === 0 ? value : null;
+      },
+      offset : 40
+},
     },
     // for animation
     animation: {
       draw: function(data) {
-        if (data.type === "line" || data.type === "area") {
-          data.element.animate({
-            d: {
-              begin: 600,
-              dur: 700,
-              from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-              to: data.path.clone().stringify(),
-              easing: Chartist.Svg.Easing.easeOutQuint
-            }
-          });
-        } else if (data.type === "point") {
           data.element.animate({
             opacity: {
               begin: (data.index + 1) * delays,
@@ -108,7 +85,7 @@ class DHT11 extends Component {
               easing: "ease"
             }
           });
-        }
+        
       }
     }
   };
@@ -151,7 +128,17 @@ class DHT11 extends Component {
     else if (jname === 'dht11graph'){
       
       this.callBackendAPI(jname,this.state.tempSelected)
-      .then(res => !this.isCancelled && this.setState({chartData: res.data}))
+      .then(res => !this.isCancelled && this.setState({temperatureData: {
+	  labels: JSON.parse(res.data)[2]
+	  ,series: [
+	    JSON.parse(res.data)[0]
+	  ]
+	},humidityData: {
+	  labels: JSON.parse(res.data)[2]
+	  ,series: [
+	    JSON.parse(res.data)[1]
+	  ]
+	}}))
       .catch(err => console.log(err));
     }
     
@@ -181,12 +168,11 @@ class DHT11 extends Component {
       
       this.postToServer('dht11');
       this.postToServer('dht11graph');
-      console.log(this.state.chartData);
-      
+      console.log(this.state.temperatureData);
+
       this.logReadings1Minute();
       
-      
-    }, 10000)
+    }, 60000)
     
   }
   
@@ -203,7 +189,7 @@ class DHT11 extends Component {
                           <CardIcon color="warning">
                               <Icon>info_outline</Icon>
                           </CardIcon>
-                          <span style = {{fontSize: '15px', margin: '0'}}>Temperature</span>
+                          <span style = {{fontSize: '15px', marginBottom: '0'}}>Temperature</span>
                           <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
                               <h3 className={classes.cardTitle}>
                                   {this.state.myTemp} <small> C</small>
@@ -232,25 +218,43 @@ class DHT11 extends Component {
               <GridItem xs={12} sm={12} md={12}>
                   <Card chart>
                       <CardHeader color="warning">
+			  <span></span>
                           <ChartistGraph
-                          className="ct-chart"
-                          data={this.temperatureChart.data}
+                          className="graphStyle"
+                          data={this.state.temperatureData}
                           type="Line"
-                          options={this.temperatureChart.options}
-                          listener={this.temperatureChart.animation}
+                          options={this.dht11Chart.options}
+                          listener={this.dht11Chart.animation}
                           />
                       </CardHeader>
                       <CardBody>
                           <div>
-                              <div style = {{fontSize: '18px',float: 'left'}}>
-                                  <span>Temperature</span>
+                              <div style = {{fontSize: '18px',float: 'left', marginBottom: '40px'}}>
+                                  <span>&nbsp;&nbsp;Temperature</span>
+                              </div>
+                          </div>
+                      </CardBody>
+		      <CardHeader color="success">
+			  <span></span>
+                          <ChartistGraph
+                          className="graphStyle"
+                          data={this.state.humidityData}
+                          type="Line"
+                          options={this.dht11Chart.options}
+                          listener={this.dht11Chart.animation}
+                          />
+                      </CardHeader>
+                      <CardBody>
+                          <div>
+                              <div style = {{fontSize: '18px', marginBottom: '20px'}}>
+                                  <span>&nbsp;&nbsp;Humidity</span>
                               </div>
                               <div style = {{float: 'right'}}>
                                   <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Period:</b></span>
                                   <Button style={{verticalAlign: '0.5px', background:'transparent', border:'none',boxShadow: 'none'}} aria-describedby={id} variant="contained" onClick={this.handleClick}>
                                       <span style = {{fontSize: '15px', textTransform: 'capitalize', fontWeight: '300'}}>{this.state.tempSelected}</span>
                                   </Button>
-                                  <Popper id={id} open={open} anchorEl={anchorEl} placement='right-start' transition>
+                                  <Popper id={id} open={open} anchorEl={anchorEl} placement='left-start' transition>
                                       {({ TransitionProps }) => (
                                       <Fade {...TransitionProps} timeout={350}>
                                           <Paper>
@@ -277,5 +281,5 @@ class DHT11 extends Component {
     }
     
     
-    export default withStyles(dropdownStyle)(DHT11);
+    export default (DHT11);
     
