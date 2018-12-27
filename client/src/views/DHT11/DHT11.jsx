@@ -58,11 +58,11 @@ class DHT11 extends Component {
   componentWillUnmount() {
     this.isCancelled = true;
   }
-
-// ##############################
-// // // Temperature Chart
-// #############################
-
+  
+  // ##############################
+  // // // Temperature Chart
+  // #############################
+  
   temperatureChart= {
     data: {
       labels: ["M", "T", "W", "T", "F", "S", "S"],
@@ -112,13 +112,13 @@ class DHT11 extends Component {
       }
     }
   };
-
-// ##############################
-// // // Drop Down
-// #############################
-
-
-
+  
+  // ##############################
+  // // // Drop Down
+  // #############################
+  
+  
+  
   handleClick = event => {
     const { currentTarget } = event;
     this.setState(state => ({
@@ -126,33 +126,33 @@ class DHT11 extends Component {
       open: !state.open
     }));
   };
-
+  
   handleClose = event => {
     if (this.state.anchorEl.contains(event.target)) {
       return;
     }
-
+    
     this.setState({ open: false,tempSelected: event.target.id });
-
+    
   };
-
-// ##############################
-// // // AJAX POST
-// #############################
-
-
+  
+  // ##############################
+  // // // AJAX POST
+  // #############################
+  
+  
   postToServer(jname){
     
     if(jname === 'dht11'){
-	    this.callBackendAPI(jname,'void')
-	    .then(res => !this.isCancelled && this.setState({myHumid: (res.jstate.split(",")[0]), myTemp: (res.jstate.split(",")[1])}))
-	    .catch(err => console.log(err));
+      this.callBackendAPI(jname,'void')
+      .then(res => !this.isCancelled && this.setState({myHumid: (res.jstate.split(",")[0]), myTemp: (res.jstate.split(",")[1])}))
+      .catch(err => console.log(err));
     }
     else if (jname === 'dht11graph'){
-
-	    this.callBackendAPI(jname,this.state.tempSelected)
-	    .then(res => !this.isCancelled && this.setState({chartData: res.data}))
-	    .catch(err => console.log(err));
+      
+      this.callBackendAPI(jname,this.state.tempSelected)
+      .then(res => !this.isCancelled && this.setState({chartData: res.data}))
+      .catch(err => console.log(err));
     }
     
   }
@@ -181,8 +181,8 @@ class DHT11 extends Component {
       
       this.postToServer('dht11');
       this.postToServer('dht11graph');
-       console.log(this.state.chartData);
-
+      console.log(this.state.chartData);
+      
       this.logReadings1Minute();
       
       
@@ -196,112 +196,86 @@ class DHT11 extends Component {
     const id = open ? 'simple-popper' : null;
     return (
       <div>
-      <GridContainer>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader>
-            <CardIcon color="warning">
-            <Icon>info_outline</Icon>
-            </CardIcon>
-              <span style = {{fontSize: '15px', margin: '0'}}>Temperature</span>
-              <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
-                <h3 className={classes.cardTitle}>
-                  {this.state.myTemp} <small> C</small>
-                </h3>
-              </div>
-            </CardHeader>
-          </Card>
-        </GridItem>
-      <GridItem xs={12} sm={6} md={3}>
-      <Card>
-        <CardHeader>
-        <CardIcon color="success">
-        <Icon>info_outline</Icon>
-        </CardIcon>
-        <span style = {{fontSize: '15px', margin: '0'}}>Humidity</span>
-          <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
-            <h3 className={classes.cardTitle}>
-              {this.state.myHumid} <small>%</small>
-            </h3>
-          </div>
-        </CardHeader>
-      </Card>
-      </GridItem>
-      </GridContainer>
-      <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card chart>
-        <CardHeader color="warning">
-        <ChartistGraph
-          className="ct-chart"
-          data={this.temperatureChart.data}
-          type="Line"
-          options={this.temperatureChart.options}
-          listener={this.temperatureChart.animation}
-        />
-        </CardHeader>
-          <CardBody>
-	<div>
-	<div style = {{fontSize: '18px',float: 'left'}}>
-        <span>Temperature</span>
-	</div>
-	<div style = {{float: 'right'}}>
-	<span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Period:</b></span>
-        <Button style={{verticalAlign: '0.5px', background:'transparent', border:'none',boxShadow: 'none'}} aria-describedby={id} variant="contained" onClick={this.handleClick}>
-           <span style = {{fontSize: '15px', textTransform: 'capitalize', fontWeight: '300'}}>{this.state.tempSelected}</span>
-        </Button>
-        <Popper id={id} open={open} anchorEl={anchorEl} placement='right-start' transition>
-          {({ TransitionProps }) => (
-            <Fade {...TransitionProps} timeout={350}>
-              <Paper>
-
-                  <MenuList role="menu">
-                    <MenuItem id="Day"
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Day
-                    </MenuItem>
-                    <MenuItem id="Week"
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Week
-                    </MenuItem>
-                    <MenuItem id="Month"
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Month
-                    </MenuItem>
-                    <MenuItem id="Year"
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      Year
-                    </MenuItem>
-                    <MenuItem id="All"
-                      onClick={this.handleClose}
-                      className={classes.dropdownItem}
-                    >
-                      All
-                    </MenuItem>
-                  </MenuList>
-              </Paper>
-            </Fade>
-          )}
-        </Popper>
-	</div>
-	</div>
-          </CardBody>
-        </Card>
-      </GridItem>
-      </GridContainer>
+          <GridContainer>
+              <GridItem xs={12} sm={6} md={3}>
+                  <Card>
+                      <CardHeader>
+                          <CardIcon color="warning">
+                              <Icon>info_outline</Icon>
+                          </CardIcon>
+                          <span style = {{fontSize: '15px', margin: '0'}}>Temperature</span>
+                          <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
+                              <h3 className={classes.cardTitle}>
+                                  {this.state.myTemp} <small> C</small>
+                              </h3>
+                          </div>
+                      </CardHeader>
+                  </Card>
+              </GridItem>
+              <GridItem xs={12} sm={6} md={3}>
+                  <Card>
+                      <CardHeader>
+                          <CardIcon color="success">
+                              <Icon>info_outline</Icon>
+                          </CardIcon>
+                          <span style = {{fontSize: '15px', margin: '0'}}>Humidity</span>
+                          <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
+                              <h3 className={classes.cardTitle}>
+                                  {this.state.myHumid} <small>%</small>
+                              </h3>
+                          </div>
+                      </CardHeader>
+                  </Card>
+              </GridItem>
+          </GridContainer>
+          <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                  <Card chart>
+                      <CardHeader color="warning">
+                          <ChartistGraph
+                          className="ct-chart"
+                          data={this.temperatureChart.data}
+                          type="Line"
+                          options={this.temperatureChart.options}
+                          listener={this.temperatureChart.animation}
+                          />
+                      </CardHeader>
+                      <CardBody>
+                          <div>
+                              <div style = {{fontSize: '18px',float: 'left'}}>
+                                  <span>Temperature</span>
+                              </div>
+                              <div style = {{float: 'right'}}>
+                                  <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Period:</b></span>
+                                  <Button style={{verticalAlign: '0.5px', background:'transparent', border:'none',boxShadow: 'none'}} aria-describedby={id} variant="contained" onClick={this.handleClick}>
+                                      <span style = {{fontSize: '15px', textTransform: 'capitalize', fontWeight: '300'}}>{this.state.tempSelected}</span>
+                                  </Button>
+                                  <Popper id={id} open={open} anchorEl={anchorEl} placement='right-start' transition>
+                                      {({ TransitionProps }) => (
+                                      <Fade {...TransitionProps} timeout={350}>
+                                          <Paper>
+                                              <MenuList role="menu">
+                                                  <MenuItem id="Day" onClick={this.handleClose} className={classes.dropdownItem}>Day</MenuItem>
+                                                  <MenuItem id="Week" onClick={this.handleClose} className={classes.dropdownItem}>Week</MenuItem>
+                                                  <MenuItem id="Month" onClick={this.handleClose} className={classes.dropdownItem}>Month</MenuItem>
+                                                  <MenuItem id="Year" onClick={this.handleClose} className={classes.dropdownItem}>Year</MenuItem>
+                                                  <MenuItem id="All" onClick={this.handleClose} className={classes.dropdownItem}>All</MenuItem>
+                                              </MenuList>
+                                          </Paper>
+                                      </Fade>
+                                      )}
+                                  </Popper>
+                              </div>
+                          </div>
+                      </CardBody>
+                  </Card>
+              </GridItem>
+          </GridContainer>
       </div>
-      );
+        );
+      }
     }
-  }
-
-
-  export default withStyles(dropdownStyle)(DHT11);
-  
+    
+    
+    export default withStyles(dropdownStyle)(DHT11);
+    
