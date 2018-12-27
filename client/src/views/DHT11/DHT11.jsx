@@ -67,8 +67,8 @@ class DHT11 extends Component {
       height: '300px',
       showPoint: false,
       axisX: {
-	 labelInterpolationFnc: function(value, index) {
-	 return index % 5 === 0 ? value : null;
+	 labelInterpolationFnc: function(value, index, labels) {
+	 return (index % Math.round(labels.length/20)) === 0 ? value : null;
       },
       offset : 40
 },
