@@ -47,8 +47,45 @@ function logReadings10Seconds() {
 
 }
 
+async function getDHT11Data(jAction,res){
 
-function getState(sName){
+	if(jAction == '' || jAction == null) return [];
+
+	var myQuery = "SELECT TEMP,HUMID,DATECREATED FROM DHT11";
+
+        switch(jAction) {
+          case 'Day':
+		myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-1 day')";
+          	break;
+          case 'Week':
+		myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-7 day')";
+                break;
+          case 'Month':
+		myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-1 month')";
+            break;
+          case 'Year':
+		myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-1 year')";
+                break;
+          case 'All':
+                break;
+        }
+	var timeArray =[];
+	var tempArray =[];
+	var humArray =[];
+
+	await db.each(myQuery, function(err, row) {
+		timeArray.push(row.DATECREATED);
+		tempArray.push(row.TEMP);
+		humArray.push(row.HUMID);
+	}, function(err, rows){ //callback for completion of .each method
+		res.send({ data: JSON.stringify([tempArray,humArray,timeArray]) });
+	});
+
+	
+}
+
+
+function getState(sName,res){
 
 	var sState = 'false';
 
@@ -70,11 +107,11 @@ function getState(sName){
             break;
         }
 
-	return sState;
+	res.send({ jstate: sState, jname: sName });
 }
 
 
-function setSwitch(sState, sName){
+function setSwitch(sState, sName,res){
 
 	switch(sName) {
 	  case 'switch1':
@@ -95,6 +132,8 @@ function setSwitch(sState, sName){
 	    break;
 	}
 
+	res.send({ jstate: sState, jname: sName });
+
 }
 
 
@@ -110,8 +149,12 @@ app.get('/express_backend', (req, res) => {
 
   console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState);
 
-  if(jAction == "set") setSwitch(jState, jName);
-  else if(jAction == "get") jState = getState(jName);
+  if(jAction == "set") setSwitch(jState, jName,res);
+  else if(jAction == "get") {
+	if(jName === "dht11graph") getDHT11Data(jAction,res);
+	else jState = getState(jName,res);
+  
+}
 
-  res.send({ jstate: jState, jname: jName });
+  
 });
