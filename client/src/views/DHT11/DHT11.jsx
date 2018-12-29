@@ -24,18 +24,15 @@ import Fade from '@material-ui/core/Fade';
 // #############################
 var Chartist = require("chartist");
 
-// ##############################
-// // // variables used to create animation on charts
-// #############################
-var delays = 20,
-durations = 500;
 
 
 class DHT11 extends Component {
   
   constructor() {
     super();
-    this.state = {myTemp: 0,myHumid: 0, anchorEl: null,open: false, tempSelected: 'Day', temperatureData: {labels: [],series: []}, humidityData: {labels: [],series: []}};
+    this.state = {myTemp: 0,myHumid: 0, anchorEl: null,open: false, periodSelected: 'Day', temperatureData: {labels: [],series: []}, humidityData: {labels: [],series: []}};
+    this.handleClick = this.handleClick.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
   
   componentDidMount(){
@@ -55,8 +52,9 @@ class DHT11 extends Component {
 
   dht11Chart= {
     options: {
-      lineSmooth: Chartist.Interpolation.cardinal({
-        tension: 10
+      lineSmooth: Chartist.Interpolation.simple({
+	divisor: 1.5,
+        fillHoles: false
       }),
       chartPadding: {
         top: 0,
@@ -72,21 +70,6 @@ class DHT11 extends Component {
       },
       offset : 40
 },
-    },
-    // for animation
-    animation: {
-      draw: function(data) {
-          data.element.animate({
-            opacity: {
-              begin: (data.index + 1) * delays,
-              dur: durations,
-              from: 0,
-              to: 1,
-              easing: "ease"
-            }
-          });
-        
-      }
     }
   };
   
@@ -97,19 +80,26 @@ class DHT11 extends Component {
   
   
   handleClick = event => {
+    event.preventDefault();
     const { currentTarget } = event;
     this.setState(state => ({
       anchorEl: currentTarget,
       open: !state.open
     }));
+    return false;
   };
   
   handleClose = event => {
+    event.preventDefault(); 
+    
     if (this.state.anchorEl.contains(event.target)) {
-      return;
+      return false;
     }
     
-    this.setState({ open: false,tempSelected: event.target.id });
+    this.setState({ open: false,periodSelected: event.target.id });
+    setTimeout(() => {
+        this.postToServer('dht11graph');
+    }, 2000)
     
   };
   
@@ -127,7 +117,7 @@ class DHT11 extends Component {
     }
     else if (jname === 'dht11graph'){
       
-      this.callBackendAPI(jname,this.state.tempSelected)
+      this.callBackendAPI(jname,this.state.periodSelected)
       .then(res => !this.isCancelled && this.setState({temperatureData: {
 	  labels: JSON.parse(res.data)[2]
 	  ,series: [
@@ -168,7 +158,6 @@ class DHT11 extends Component {
       
       this.postToServer('dht11');
       this.postToServer('dht11graph');
-      console.log(this.state.temperatureData);
 
       this.logReadings1Minute();
       
@@ -252,7 +241,7 @@ class DHT11 extends Component {
                               <div style = {{float: 'right'}}>
                                   <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Period:</b></span>
                                   <Button style={{verticalAlign: '0.5px', background:'transparent', border:'none',boxShadow: 'none'}} aria-describedby={id} variant="contained" onClick={this.handleClick}>
-                                      <span style = {{fontSize: '15px', textTransform: 'capitalize', fontWeight: '300'}}>{this.state.tempSelected}</span>
+                                      <span style = {{fontSize: '15px', textTransform: 'capitalize', fontWeight: '300'}}>{this.state.periodSelected}</span>
                                   </Button>
                                   <Popper id={id} open={open} anchorEl={anchorEl} placement='left-start' transition>
                                       {({ TransitionProps }) => (
@@ -282,4 +271,3 @@ class DHT11 extends Component {
     
     
     export default (DHT11);
-    

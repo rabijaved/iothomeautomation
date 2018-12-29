@@ -5,6 +5,8 @@ const Gpio = require('onoff').Gpio;
 const app = express();
 const port = process.env.PORT || 5000;
 
+const rpiBacklight = require('rpi-backlight');
+
 //Set up database
 var sqlite3 = require('sqlite3').verbose();  
 var db = new sqlite3.Database('./SensorData.db'); 
@@ -15,13 +17,58 @@ const switch2 = new Gpio(15, 'out');
 const switch3 = new Gpio(17, 'out');
 const switch4 = new Gpio(18, 'out');
 
+const motionSensorGpio = new Gpio(25, 'in');
+
 var myTempHum = '';
 var setDbDelay = 0;
+var backlightState = 0;
+var backlightOnDUration = 120; // 120 x 500 = 1 minute
 
 function getDHT11Reading(){
 
 	myTempHum = fs.readFileSync('dht11_output', 'utf8');
+}
 
+
+function piBacklightControlInitialize(){
+	
+	rpiBacklight.isPoweredOn().then((powerStatus) => {
+	 if(powerStatus) { 
+		 backlightState = 1;
+		 rpiBacklight.setBrightness(30);
+	 }
+	});
+	
+}
+
+
+function piBacklightControl(){
+
+	setTimeout(() => {
+
+		var motionSensor = motionSensorGpio.readSync();
+		if(motionSensor === 1) {
+			rpiBacklight.isPoweredOn().then((powerStatus) => {
+				if(!powerStatus) {rpiBacklight.powerOn();
+				console.log(powerStatus + " :turning on screen backlight");}
+			}); 
+			backlightState = 1;
+			rpiBacklight.setBrightness(30);
+		}else{
+			if(backlightState != 0) backlightState++;
+			if(backlightState >=100) {
+				if(backlightState >=120) {
+					rpiBacklight.powerOff();
+					backlightState = 0;
+					console.log("turning off screen backlight");
+				}else rpiBacklight.setBrightness(Math.ceil(118 - backlightState*0.9)); //solve for 30x - 120 = 10 & 30x - 100y = 28 
+				
+			}	
+		}
+		
+		piBacklightControl();
+	
+ 	}, 500);
 }
 
 
@@ -68,7 +115,12 @@ async function getDHT11Data(jAction,res){
                 break;
           case 'All':
                 break;
+	  default :
+		myQuery = "";
+		break;
         }
+
+	if ( myQuery === "") return [];
 	var timeArray =[];
 	var tempArray =[];
 	var humArray =[];
@@ -116,19 +168,19 @@ function setSwitch(sState, sName,res){
 	switch(sName) {
 	  case 'switch1':
 	    if(sState == 'true') switch1.writeSync(1);
-	    else switch1.writeSync(0);
+	    else if(sState == 'false') switch1.writeSync(0);
 	    break;
 	  case 'switch2':
 	    if(sState == 'true') switch2.writeSync(1);
-	    else switch2.writeSync(0);
+	    else if(sState == 'false') switch2.writeSync(0);
 	    break;
 	  case 'switch3':
 	    if(sState == 'true') switch3.writeSync(1);
-	    else switch3.writeSync(0);
+	    else if(sState == 'false') switch3.writeSync(0);
 	    break;
 	  case 'switch4':
 	    if(sState == 'true') switch4.writeSync(1);
-	    else switch4.writeSync(0);
+	    else if(sState == 'false') switch4.writeSync(0);
 	    break;
 	}
 
@@ -137,7 +189,22 @@ function setSwitch(sState, sName,res){
 }
 
 
-logReadings10Seconds();
+function initializeSwitches(){
+
+	switch1.writeSync(1);
+	switch2.writeSync(1);
+	switch3.writeSync(1);
+	switch4.writeSync(1);
+
+}
+rpiBacklight.powerOff();
+rpiBacklight.powerOn();
+
+initializeSwitches(); //set all to off
+logReadings10Seconds(); // Temperature and Humidity Sensor Readings
+piBacklightControlInitialize();
+piBacklightControl(); // HUman Motion Sensor and Backlight Control
+
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
@@ -151,7 +218,7 @@ app.get('/express_backend', (req, res) => {
 
   if(jAction == "set") setSwitch(jState, jName,res);
   else if(jAction == "get") {
-	if(jName === "dht11graph") getDHT11Data(jAction,res);
+	if(jName === "dht11graph") getDHT11Data(jState,res);
 	else jState = getState(jName,res);
   
 }

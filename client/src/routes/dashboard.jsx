@@ -12,14 +12,14 @@ const dashboardRoutes = [
   {
     path: "/dashboard",
     sidebarName: "Dashboard",
-    navbarName: "Material Dashboard",
+    navbarName: "",
     icon: Dashboard,
     component: DashboardPage
   },
   {
     path: "/dht11",
     sidebarName: "Temperature",
-    navbarName: "Temperature",
+    navbarName: "Temperature & Humidity",
     icon: Notifications,
     component: DHT11
   },
