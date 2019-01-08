@@ -267,15 +267,18 @@ app.get('/express_backend', (req, res) => {
   var jName = req.query['jname'];
   var jState = req.query['jstate'];
   var jAction = req.query['jaction'];
+  
+  var authheader = req.headers.authorization;
+  
+  console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState + ' ,Token: ' + authheader);
 
-  console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState);
-
+if(authheader == 'MGUzY2JhYzMtZDBkYy00N2FiLTk2YWEtMjc4NWIwNTU3MzQ2'){
   if(jAction == "set") setSwitch(jState, jName,res);
   else if(jAction == "get") {
 	if(jName === "dht11graph") getDHT11Data(jState,res);
 	else jState = getState(jName,res);
   
 }
-
+}
   
 });

@@ -26,7 +26,11 @@ class ToggleSwitch extends Component {
   callBackendAPI = async (switchName, switchState, switchAction) => {
   
     var getUrl = '/express_backend?jname='+switchName + '&jstate='+switchState + '&jaction='+switchAction;
-    const response = await fetch(getUrl);
+    const response = await fetch(getUrl,{method: 'get', 
+	   headers: new Headers({
+		 'Authorization': btoa('0e3cbac3-d0dc-47ab-96aa-2785b0557346'), 
+		 'Content-Type': 'application/x-www-form-urlencoded'
+	   })});
 
     var body;
     if (response.status === 200) {
