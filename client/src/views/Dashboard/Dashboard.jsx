@@ -73,8 +73,8 @@ class Dashboard extends React.Component {
   render() {
 	const classes = this.props;
     return (
-    <Card style = {{marginTop: '-60px'}}>
-      <GridContainer>
+    <Card style = {{marginTop: '-60px', backgroundColor:'black', paddingBottom: '60px', marginLeft: '-10px'}}>
+      <GridContainer style = {{paddingLeft: '100px'}}>
         <GridItem xs={8} sm={4} md={6}>         
               <CardHeader>
               </CardHeader>
@@ -96,27 +96,27 @@ class Dashboard extends React.Component {
                 </GridItem>
               </CardHeader>
         </GridItem>
-	  <GridItem xs={8} sm={4} md={3}>
+	  <GridItem xs={8} sm={4} md={3} style = {{marginTop: '25px'}}>
 	  <CardHeader>
 		  <CardIcon color="warning">
 			  <Icon>info_outline</Icon>
 		  </CardIcon>
-		  <span style = {{fontSize: '25px', marginBottom: '0'}}><b>Temperature</b></span>
+		  <span style = {{fontSize: '25px', margin: '0', color: 'white'}}><b>Temperature</b></span>
 		  <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
-			  <h3 style = {{fontSize: '50px'}} className={classes.cardTitle}>
+			  <h3 style = {{fontSize: '50px' , color: 'white'}} className={classes.cardTitle}>
 				  <b>{this.state.myTemp}</b> <small> C</small>
 			  </h3>
 		  </div>
 	  </CardHeader>
       </GridItem>
-      <GridItem xs={8} sm={4} md={3}>
+      <GridItem xs={8} sm={4} md={3} style = {{marginTop: '25px'}}>
 	  <CardHeader>
 		  <CardIcon color="success">
 			  <Icon>info_outline</Icon>
 		  </CardIcon>
-		  <span style = {{fontSize: '25px', margin: '0'}}><b>Humidity</b></span>
+		  <span style = {{fontSize: '25px', margin: '0', color: 'white'}}><b>Humidity</b></span>
 		  <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
-			  <h3 style = {{fontSize: '50px'}} className={classes.cardTitle}>
+			  <h3 style = {{fontSize: '50px', color: 'white'}} className={classes.cardTitle}>
 				  <b>{this.state.myHumid}</b> <small>%</small>
 			  </h3>
 		  </div>

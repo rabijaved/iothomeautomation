@@ -22,7 +22,11 @@ const motionSensorGpio = new Gpio(25, 'in');
 var myTempHum = '';
 var setDbDelay = 0;
 var backlightState = 0;
-var backlightOnDUration = 120; // 120 x 500 = 1 minute
+const backlightOnDUration = 120; // 120 x 500 = 1 minute
+const backlightMaxBrightness = 40;
+const backlightMinBrightness = 8;
+const backlightEaseDuration = 45;
+var backlightLock = 0;
 
 function getDHT11Reading(){
 
@@ -35,10 +39,62 @@ function piBacklightControlInitialize(){
 	rpiBacklight.isPoweredOn().then((powerStatus) => {
 	 if(powerStatus) { 
 		 backlightState = 1;
-		 rpiBacklight.setBrightness(30);
+		 rpiBacklight.setBrightness(backlightMaxBrightness);
 	 }
 	});
 	
+}
+
+
+
+function easeInDisplayOn(){
+	if (backlightLock == 0 ){
+		backlightLock = 1;
+		rpiBacklight.powerOn();
+		easeInDisplayOnWrapper(backlightMinBrightness);
+	}
+}
+
+function easeInDisplayOnWrapper(timerCounter){
+	
+	setTimeout(() => {
+		rpiBacklight.setBrightness(timerCounter);
+		if(timerCounter >= backlightMaxBrightness) {
+			backlightLock = 0;
+			backlightState = 1;
+			return;
+		}
+		timerCounter++;
+		
+		easeInDisplayOnWrapper(timerCounter);
+		
+	}, backlightEaseDuration);
+}
+
+
+function easeOutDisplayOff(){
+	
+	if (backlightLock == 0 ){
+		backlightLock = 1;
+		easeOutDisplayOffWrapper(backlightMaxBrightness - 1);
+	}
+}
+
+
+function easeOutDisplayOffWrapper(timerCounter){
+	
+	setTimeout(() => {
+	
+		rpiBacklight.setBrightness(timerCounter);
+		if(timerCounter <= backlightMinBrightness) {
+			rpiBacklight.powerOff();
+			backlightLock = 0;
+			return
+		};
+		timerCounter--;
+		easeOutDisplayOffWrapper(timerCounter);
+		
+	}, backlightEaseDuration);
 }
 
 
@@ -49,20 +105,19 @@ function piBacklightControl(){
 		var motionSensor = motionSensorGpio.readSync();
 		if(motionSensor === 1) {
 			rpiBacklight.isPoweredOn().then((powerStatus) => {
-				if(!powerStatus) {rpiBacklight.powerOn();
-				console.log(powerStatus + " :turning on screen backlight");}
+			if(!powerStatus) {
+					console.log("Turning on screen backlight");
+					easeInDisplayOn();}
 			}); 
-			backlightState = 1;
-			rpiBacklight.setBrightness(30);
 		}else{
 			if(backlightState != 0) backlightState++;
-			if(backlightState >=100) {
-				if(backlightState >=120) {
-					rpiBacklight.powerOff();
-					backlightState = 0;
-					console.log("turning off screen backlight");
-				}else rpiBacklight.setBrightness(Math.ceil(118 - backlightState*0.9)); //solve for 30x - 120 = 10 & 30x - 100y = 28 
-				
+			if(backlightState >=backlightOnDUration) {
+				rpiBacklight.isPoweredOn().then((powerStatus) => {
+					if(powerStatus) {
+					console.log("Turning off screen backlight");
+					easeOutDisplayOff();
+					}
+				});
 			}	
 		}
 		
@@ -204,7 +259,6 @@ initializeSwitches(); //set all to off
 logReadings10Seconds(); // Temperature and Humidity Sensor Readings
 piBacklightControlInitialize();
 piBacklightControl(); // HUman Motion Sensor and Backlight Control
-
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
