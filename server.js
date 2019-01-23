@@ -6,7 +6,7 @@ const port = process.env.PORT || 5000;
 
 const backlightController = require('./scripts/js/backlightControl');
 const switchController = require('./scripts/js/switchControl');
-
+const dht11Controller = require('./scripts/js/dht11Control');
 
 
 
@@ -14,7 +14,7 @@ const switchController = require('./scripts/js/switchControl');
 switchController.initializeSwitches(); //set all to off
 backlightController.piBacklightControlInitialize(); // Motion Sensor and Backlight Control
 
-logReadings10Seconds(); // Temperature and Humidity Sensor Readings
+dht11Controller.initializeDHT11(); // Temperature and Humidity Sensor Readings
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -32,7 +32,7 @@ app.get('/express_backend', (req, res) => {
 if(authheader == 'MGUzY2JhYzMtZDBkYy00N2FiLTk2YWEtMjc4NWIwNTU3MzQ2'){
   if(jAction == "set") switchController.setSwitch(jState, jName,res);
   else if(jAction == "get") {
-	if(jName === "dht11graph") getDHT11Data(jState,res);
+	if(jName === "dht11graph") dht11Controller.getDHT11Data(jState,res);
 	else jState = switchController.getState(jName,res);
   
 }
