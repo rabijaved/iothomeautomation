@@ -81,7 +81,7 @@ void read_dht_data()
 		float f = c * 1.8f + 32;
 		//printf("Humidity = %.1f %% Temperature = %.1f *C (%.1f *F)\n", h, c, f );
 
-		FILE *fst = fopen("dht11_output", "w");
+		FILE *fst = fopen("./bin/dht11_output", "w");
 
 		if (fst == NULL)
 		{
