@@ -11,8 +11,7 @@ const dht11Controller = require('./scripts/js/dht11Control');
 
 switchController.initializeSwitches(); //set all to off
 backlightController.piBacklightControlInitialize(); // Motion Sensor and Backlight Control
-
-dht11Controller.initializeDHT11(); // Temperature and Humidity Sensor Readings
+dht11Controller.pollLogDht11(); // Temperature and Humidity Sensor Readings
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));

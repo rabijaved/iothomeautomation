@@ -12,7 +12,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "scripts/./dht11 | node server.js"
+    "start": "bin/./dht11 | node server.js"
   },
   "author": "",
   "license": "ISC"

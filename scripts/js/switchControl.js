@@ -1,5 +1,5 @@
 const Gpio = require('onoff').Gpio;
-
+const dht11Controller = require('./dht11Control');
 
 
 //set up switches
@@ -27,7 +27,7 @@ module.exports = {
 
             switch(sName) {
             case 'dht11':
-                sState = myTempHum;
+                sState = dht11Controller.tempHumidCache;
                 break;
             case 'switch1':
                 if(switch1.readSync() == 1) sState = 'true';

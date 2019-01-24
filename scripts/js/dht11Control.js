@@ -6,39 +6,31 @@ var db = new sqlite3.Database('./SensorData.db');
 
 var myTempHum = '';
 var setDbDelay = 0;
+const dh11FilePath = './bin/dht11_output';
 
 
-function logReadings10Seconds() {
+var self=module.exports = {
 
-  setTimeout(() => {
+	tempHumidCache: '',
+    pollLogDht11: function() {
 
-		getDHT11Reading();
+	  setTimeout(() => {
 
-			if(setDbDelay >= 90) {
+			myTempHum = fs.readFileSync(dh11FilePath, 'utf8');
+			self.tempHumidCache = myTempHum;
+				if(setDbDelay >= 90) {
 
-				var tem = myTempHum.split(",");
-				db.run("INSERT INTO DHT11(TEMP, HUMID,DATECREATED) VALUES (" + tem[1]+ "," + tem[0]+ ",datetime('now','localtime'))");  
-				setDbDelay = 0;
-			}
+					var tem = myTempHum.split(",");
+					db.run("INSERT INTO DHT11(TEMP, HUMID,DATECREATED) VALUES (" + tem[1]+ "," + tem[0]+ ",datetime('now','localtime'))");  
+					setDbDelay = 0;
+				}
 
-		setDbDelay++;
-		logReadings10Seconds();
+			setDbDelay++;
+			self.pollLogDht11();
 
-  }, 10000)
+	  }, 10000)
 
-}
-
-
-module.exports = {
-
-    initializeDHT11:function(){
-        logReadings10Seconds();
-    },
-
-    getDHT11Reading:function(){
-        myTempHum = fs.readFileSync('dht11_output', 'utf8');
-    },
-
+	},
     getDHT11Data:async function (jAction,res){
 
         if(jAction == '' || jAction == null) return [];
