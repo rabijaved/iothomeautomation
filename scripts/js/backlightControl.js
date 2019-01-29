@@ -1,5 +1,7 @@
 const rpiBacklight = require('rpi-backlight');
 const Gpio = require('onoff').Gpio;
+var sqlite3 = require('sqlite3').verbose();  
+var db = new sqlite3.Database('./SensorData.db'); 
 
 const motionSensorGpio = new Gpio(25, 'in');
 const backlightOnDUration = 120; // 120 x 500 = 1 minute
@@ -9,6 +11,9 @@ const backlightEaseDuration = 45;
 
 var backlightState = 0;
 var backlightLock = 0;
+const dbWriteDelay = 60; //20 x 500 = 10000 ms
+var wrtieDelayCounter = 0;
+var writeDelayValue = 0;
 
 module.exports = {
 //Entry point to backlight control
@@ -98,6 +103,17 @@ function piBacklightControl(){
 			}	
 		}
 		
+		//log the reading with delay
+		if(wrtieDelayCounter < dbWriteDelay){
+			 wrtieDelayCounter++;
+			 if(motionSensor === 1) writeDelayValue = 1;
+		}
+		else if (wrtieDelayCounter >= dbWriteDelay){
+			
+			db.run("INSERT INTO MOTION_SENSOR(MT_VAL,DATECREATED) VALUES (" + writeDelayValue+ ",datetime('now','localtime'))");
+			wrtieDelayCounter = 0;
+			writeDelayValue = 0;  
+		}
 		piBacklightControl();
 	
  	}, 500);

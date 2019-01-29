@@ -7,6 +7,7 @@ import Notifications from "@material-ui/icons/Notifications";
 import DashboardPage from "views/Dashboard/Dashboard.jsx";
 import Switch from "views/Switch/Switch.jsx";
 import DHT11 from "views/DHT11/DHT11.jsx";
+import Motion from "views/Motion/Motion.jsx";
 
 const dashboardRoutes = [
   {
@@ -28,6 +29,12 @@ const dashboardRoutes = [
     navbarName: "Switch",
     icon: Copyright,
     component: Switch
+  },
+  { path: "/motion",
+    sidebarName: "Motion",
+    navbarName: "Motion",
+    icon: Copyright,
+    component: Motion
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];

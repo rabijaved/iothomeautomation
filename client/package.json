@@ -17,6 +17,7 @@
     "react": "16.5.2",
     "react-analog-clock": "^2.1.0",
     "react-chartist": "0.13.1",
+    "react-date-picker": "^7.2.0",
     "react-dom": "16.5.2",
     "react-google-maps": "9.4.5",
     "react-router-dom": "4.3.1",
