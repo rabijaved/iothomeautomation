@@ -1,6 +1,7 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Copyright from "@material-ui/icons/Copyright";
+import Home from "@material-ui/icons/Home";
 // import ContentPaste from "@material-ui/icons/ContentPaste";
 import Notifications from "@material-ui/icons/Notifications";
 // core components/views
@@ -33,7 +34,7 @@ const dashboardRoutes = [
   { path: "/motion",
     sidebarName: "Motion",
     navbarName: "Motion",
-    icon: Copyright,
+    icon: Home,
     component: Motion
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }

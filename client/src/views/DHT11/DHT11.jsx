@@ -52,12 +52,12 @@ class DHT11 extends Component {
 
   dht11Chart= {
     options: {
-      lineSmooth: Chartist.Interpolation.simple({
-	divisor: 1.5,
-        fillHoles: false
+      lineSmooth: Chartist.Interpolation.cardinal({
+        fillHoles: false,
+        tension: 1
       }),
       chartPadding: {
-        top: 0,
+        top: 10,
         right: 0,
         bottom: 0,
         left: 0
@@ -242,12 +242,12 @@ class DHT11 extends Component {
                               <div style = {{fontSize: '18px', marginBottom: '20px'}}>
                                   <span>&nbsp;&nbsp;Humidity</span>
                               </div>
-                              <div style = {{float: 'right'}}>
-                                  <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Period:</b></span>
-                                  <Button style={{verticalAlign: '0.5px', background:'transparent', border:'none',boxShadow: 'none'}} aria-describedby={id} variant="contained" onClick={this.handleClick}>
+                              <div style = {{float: 'left', marginLeft: '15px'}}>
+                                  <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Period:&nbsp;</b></span>
+                                  <Button style={{verticalAlign: '0.5px', background:'transparent',boxShadow: 'none', borderStyle : 'solid', borderWidth : '1px'}} aria-describedby={id} variant="contained" onClick={this.handleClick}>
                                       <span style = {{fontSize: '15px', textTransform: 'capitalize', fontWeight: '300'}}>{this.state.periodSelected}</span>
                                   </Button>
-                                  <Popper id={id} open={open} anchorEl={anchorEl} placement='left-start' transition>
+                                  <Popper id={id} open={open} anchorEl={anchorEl} placement='right-start' transition>
                                       {({ TransitionProps }) => (
                                       <Fade {...TransitionProps} timeout={350}>
                                           <Paper>
