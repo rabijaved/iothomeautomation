@@ -6,12 +6,14 @@ const backlightController = require('./scripts/js/backlightControl');
 const switchController = require('./scripts/js/switchControl');
 const dht11Controller = require('./scripts/js/dht11Control');
 const motionController = require('./scripts/js/motionControl');
+const nodeMcuController = require('./scripts/js/nodeMcuLHTControl');
 
 
 
 
 
 switchController.initializeSwitches(); //set all to off
+//nodeMcuController.initializeNodeMcu();
 backlightController.piBacklightControlInitialize(); // Motion Sensor and Backlight Control
 dht11Controller.pollLogDht11(); // Temperature and Humidity Sensor Readings
 
@@ -33,7 +35,14 @@ app.get('/express_backend', (req, res) => {
 	  switch(jAction){
 		  //---------------------------SET------------------------------
 		  case "set":
-			switchController.setSwitch(jState, jName,res);
+			switch(jName){
+				case "mculht":
+					nodeMcuController.setMcuLhtData(jState);
+					break;
+				default:
+					switchController.setSwitch(jState, jName,res);
+					break;
+			}
 			break;
 		  //---------------------------GET------------------------------
 		  case "get":
