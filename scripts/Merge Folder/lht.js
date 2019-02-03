@@ -6,11 +6,12 @@ var db = new sqlite3.Database('./SensorData.db');
 /*
 ALTER TABLE DHT11 ADD AMBLIGHT INT;
 UPDATE DHT11 SET AMBLIGHT = 0;
+ALTER TABLE DHT11 RENAME TO AL_DHT11;
 */
 function LogtoDatabase(alight, temp, humid){
 
     try{
-    db.run("INSERT INTO DHT11(AMBLIGHT,TEMP, HUMID,DATECREATED) VALUES (" + alight+","+temp+","+humid+",datetime('now','localtime'))");  
+    db.run("INSERT INTO AL_DHT11(AMBLIGHT,TEMP, HUMID,DATECREATED) VALUES (" + alight+","+temp+","+humid+",datetime('now','localtime'))");  
     }catch(err){console.log(err);}
 
 }
@@ -21,7 +22,7 @@ var self=module.exports = {
     getAmbLightData:async function (res){
 
 
-        var myQuery = "SELECT AMBLIGHT,DATECREATED FROM DHT11";
+        var myQuery = "SELECT AMBLIGHT,DATECREATED FROM AL_DHT11";
 
             switch(jAction) {
             case 'Day':
