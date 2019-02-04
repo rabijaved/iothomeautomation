@@ -10,14 +10,13 @@ class AmbLight extends Component {
 
   constructor() {
     super();
-    this.state = {myTemp: 0,myHumid: 0, anchorEl: null,open: false, periodSelected: 'Day', temperatureData: {labels: [],series: []}, humidityData: {labels: [],series: []}};
+    this.state = {anchorEl: null, periodSelected: 'Day', lightData: {labels: [],series: []}};
     this.handleClick = this.handleClick.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
   
   componentDidMount(){
-    this.postToServer('dht11');
-    this.postToServer('dht11graph');
+    this.postToServer('amblightgraph');
     this.logReadings1Minute();
   }
   
@@ -35,15 +34,10 @@ class AmbLight extends Component {
   postToServer(jname){
     
       this.callBackendAPI(jname,this.state.periodSelected)
-      .then(res => !this.isCancelled && this.setState({temperatureData: {
-	  labels: JSON.parse(res.data)[2]
+      .then(res => !this.isCancelled && this.setState({lightData: {
+	  labels: JSON.parse(res.data)[1]
 	  ,series: [
 	    JSON.parse(res.data)[0]
-	  ]
-	},humidityData: {
-	  labels: JSON.parse(res.data)[2]
-	  ,series: [
-	    JSON.parse(res.data)[1]
 	  ]
 	}}))
       .catch(err => console.log(err));
@@ -66,8 +60,7 @@ class AmbLight extends Component {
       
     }else
     {
-      if(jname === 'dht11') body = {jstate: '0,0'};
-      else if (jname === 'dht11graph') body = {};
+       body = {};
     }
     return body;
   };
