@@ -56,6 +56,7 @@ String readSensors(){
   //Read data and store it to variables hum and temp
   hum = DHT.humidity;
   temp= DHT.temperature;    
+  //Serial.println(String(lightVal) + "|" + String(temp) + "|" + String(hum));
   return String(lightVal) + "|" + String(temp) + "|" + String(hum);
 
 }
@@ -80,7 +81,7 @@ void loop() {
 
 
 postData();
-delay(9500);
+delay(150000);
 
   
 /*
