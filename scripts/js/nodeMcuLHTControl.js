@@ -45,7 +45,7 @@ var self=module.exports = {
     getAmbLightData:async function (jAction,res){
 
 
-        var myQuery = "SELECT AMBLIGHT,DATECREATED FROM AL_DHT11 WHERE DATECREATED >= '" + jAction +"' ORDER BY DATECREATED ASC;";
+        var myQuery = "SELECT AMBLIGHT,strftime('%H:%M', DATECREATED) AS DATECREATED FROM AL_DHT11 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= '" + jAction +"' ORDER BY DATECREATED ASC;";
 
         var timeArray =[];
         var lightArray =[];
