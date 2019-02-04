@@ -80,7 +80,7 @@ class Motion extends Component {
 
 		if (jname === 'motiongraph'){
 		  
-		    var today = this.state.periodSelected;
+		  var today = this.state.periodSelected;
 			var dd = today.getDate();
 			var mm = today.getMonth() + 1; 
 			var yyyy = today.getFullYear();
