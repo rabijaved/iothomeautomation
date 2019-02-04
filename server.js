@@ -4,7 +4,6 @@ const port = process.env.PORT || 5000;
 
 const backlightController = require('./scripts/js/backlightControl');
 const switchController = require('./scripts/js/switchControl');
-const dht11Controller = require('./scripts/js/dht11Control');
 const motionController = require('./scripts/js/motionControl');
 const nodeMcuController = require('./scripts/js/nodeMcuLHTControl');
 
@@ -13,9 +12,8 @@ const nodeMcuController = require('./scripts/js/nodeMcuLHTControl');
 
 
 switchController.initializeSwitches(); //set all to off
-//nodeMcuController.initializeNodeMcu();
+nodeMcuController.initalizeReadings();
 backlightController.piBacklightControlInitialize(); // Motion Sensor and Backlight Control
-dht11Controller.pollLogDht11(); // Temperature and Humidity Sensor Readings
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -48,10 +46,13 @@ app.get('/express_backend', (req, res) => {
 		  case "get":
 			switch(jName){
 				case "dht11graph": 
-					dht11Controller.getDHT11Data(jState,res);
+					nodeMcuController.getDHT11Data(jState,res);
 					break;
 				case "motiongraph":
 					motionController.getMotionData(jState,res);
+					break;
+				case "amblightgraph":
+					nodeMcuController.getAmbLightData(jState,res);
 					break;
 				default:
 					jState = switchController.getState(jName,res);

@@ -1,5 +1,5 @@
 const Gpio = require('onoff').Gpio;
-const dht11Controller = require('./dht11Control');
+const nodeMcuController = require('./nodeMcuLHTControl');
 
 
 //set up switches
@@ -27,7 +27,7 @@ module.exports = {
 
             switch(sName) {
             case 'dht11':
-                sState = dht11Controller.tempHumidCache;
+                sState = Math.round( nodeMcuController.humidReading * 10 )/10 + ',' + Math.round( nodeMcuController.tempReading * 10 )/10;
                 break;
             case 'switch1':
                 if(switch1.readSync() == 1) sState = 'true';
