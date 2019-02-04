@@ -43,7 +43,7 @@ const dashboardRoutes = [
     navbarName: "Light Intensity",
     icon: BrightnessMedium,
     component: AmbLight
-  }
+  },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];
 
