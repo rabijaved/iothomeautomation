@@ -14,6 +14,7 @@ const int analog_ip = A0; //Naming analog input pin
 float hum;  //Stores humidity value
 float temp; //Stores temperature value
 const char* host="http://192.168.1.108:5000/";
+const int retryCount = 5;
 
 WiFiServer server(80);
  
@@ -50,31 +51,39 @@ void setup() {
 
 String readSensors(){
 
-  lightVal = analogRead (analog_ip); // Analog Values 0 to 1023
   int chk = DHT.read11(DHT11_PIN);
-  //if(chk==DHTLIB_OK)
-  //Read data and store it to variables hum and temp
-  hum = DHT.humidity;
-  temp= DHT.temperature;    
-  //Serial.println(String(lightVal) + "|" + String(temp) + "|" + String(hum));
-  return String(lightVal) + "|" + String(temp) + "|" + String(hum);
 
+  int readRetry = 0;
+  while(chk!=DHTLIB_OK){
+    delay(10);
+    chk = DHT.read11(DHT11_PIN);
+    readRetry++;
+    if(readRetry >= retryCount) return "invalid";
+  }
+
+  hum = DHT.humidity;
+  temp= DHT.temperature;  
+  lightVal = analogRead (analog_ip); // Analog Values 0 to 1023
+
+  return String(lightVal) + "|" + String(temp) + "|" + String(hum);
 }
 
 
 void postData(){
 
   String sensorReading = readSensors();
-  String pData = "express_backend?jname=mculht&jstate="+sensorReading+"&jaction=set";
 
-  HTTPClient http;
-  http.begin(host+pData);
-  http.addHeader("Authorization", String(base64::encode("0e3cbac3-d0dc-47ab-96aa-2785b0557346")));
-  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-  http.GET();
-  http.writeToStream(&Serial);
-  http.end();
+  if(sensorReading != "invalid"){
+    String pData = "express_backend?jname=mculht&jstate="+sensorReading+"&jaction=set";
 
+    HTTPClient http;
+    http.begin(host+pData);
+    http.addHeader("Authorization", String(base64::encode("0e3cbac3-d0dc-47ab-96aa-2785b0557346")));
+    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    http.GET();
+    http.writeToStream(&Serial);
+    http.end();
+  }
 }
 
 void loop() {
