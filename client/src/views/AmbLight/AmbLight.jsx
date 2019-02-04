@@ -44,27 +44,26 @@ class AmbLight extends Component {
   
   lightChart= {
     options: {
+      lineSmooth: Chartist.Interpolation.cardinal({
+        fillHoles: false,
+        tension: 1
+      }),
       chartPadding: {
-        top: 0,
+        top: 10,
         right: 0,
         bottom: 0,
         left: 0
       },
       height: '300px',
+      showPoint: false,
       axisX: {
-		 labelInterpolationFnc: function(value, index, labels) {
-		 return (index % Math.round(labels.length/20)) === 0 ? value : null;
+	 labelInterpolationFnc: function(value, index, labels) {
+	 return (index % Math.round(labels.length/20)) === 0 ? value : null;
       },
       offset : 40
-	  },axisY: {
-		 labelInterpolationFnc: function(value, index, labels) {
-		 return null;
-      },
-      offset : 40
-}
+},
     }
   };
-
 
   // ##############################
   // // // AJAX POST
@@ -134,4 +133,48 @@ class AmbLight extends Component {
     
   };
 
-}
+
+
+	render() {
+
+	   return (
+      <div>
+          <GridContainer>
+              <GridItem xs={12} sm={12} md={12}>
+                  <Card chart>
+                      <CardHeader color="warning">
+			  <span></span>
+                          <ChartistGraph
+                          className="graphStyle"
+                          data={this.state.lightData}
+                          type="Bar"
+                          options={this.lightChart.options}
+                          listener={this.lightChart.animation}
+                          />
+                      </CardHeader>
+                      <CardBody>
+                          <div>
+                              <div style = {{fontSize: '18px', marginBottom: '20px'}}>
+                                  <span>&nbsp;&nbsp;Light Intensity</span>
+                              </div>
+                              <div style = {{float: 'left', zIndex: '99', marginLeft: '15px'}}>
+                                  <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Date:</b></span>
+                                        <div>
+										<DatePicker
+										  onChange={this.onDateChange}
+										  maxDate={new Date()}
+										  value={this.state.periodSelected}
+										/>
+									  </div>
+                              </div>
+                          </div>
+                      </CardBody>
+                  </Card>
+              </GridItem>
+          </GridContainer>
+      </div>
+        );
+	}
+};
+
+export default (AmbLight);
