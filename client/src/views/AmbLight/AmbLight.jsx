@@ -1,8 +1,16 @@
+import React, { Component } from "react";
 
+import GridItem from "components/Grid/GridItem.jsx";
+import GridContainer from "components/Grid/GridContainer.jsx";
+import Card from "components/Card/Card.jsx";
+import CardHeader from "components/Card/CardHeader.jsx";
+import CardBody from "components/Card/CardBody.jsx";
 
+// react plugin for creating charts
+import ChartistGraph from "react-chartist";
 
-
-
+// @material-ui/core components
+import DatePicker from 'react-date-picker';
 
 
 
@@ -10,12 +18,11 @@ class AmbLight extends Component {
 
   constructor() {
     super();
-    this.state = {anchorEl: null, periodSelected: 'Day', lightData: {labels: [],series: []}};
-    this.handleClick = this.handleClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.state = {periodSelected: new Date(), lightData: {labels: [],series: []}};
   }
   
   componentDidMount(){
+  	this.setState({ periodSelected:new Date() });
     this.postToServer('amblightgraph');
     this.logReadings1Minute();
   }
@@ -24,25 +31,75 @@ class AmbLight extends Component {
     this.isCancelled = true;
   }
 
+	onDateChange = event => {
+		this.setState({ periodSelected: event});
+		setTimeout(() => {
+			this.postToServer('amblightgraph');
+		}, 2000)
+    };
+
+  // ##############################
+  // // // Chart Definition
+  // #############################
+  
+  lightChart= {
+    options: {
+      chartPadding: {
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0
+      },
+      height: '300px',
+      axisX: {
+		 labelInterpolationFnc: function(value, index, labels) {
+		 return (index % Math.round(labels.length/20)) === 0 ? value : null;
+      },
+      offset : 40
+	  },axisY: {
+		 labelInterpolationFnc: function(value, index, labels) {
+		 return null;
+      },
+      offset : 40
+}
+    }
+  };
 
 
   // ##############################
   // // // AJAX POST
   // #############################
   
-  
-  postToServer(jname){
-    
-      this.callBackendAPI(jname,this.state.periodSelected)
-      .then(res => !this.isCancelled && this.setState({lightData: {
-	  labels: JSON.parse(res.data)[1]
-	  ,series: [
-	    JSON.parse(res.data)[0]
-	  ]
-	}}))
-      .catch(err => console.log(err));
-    
-  }
+
+	postToServer(jname){
+
+		if (jname === 'amblightgraph'){
+		  
+		  var today = this.state.periodSelected;
+			var dd = today.getDate();
+			var mm = today.getMonth() + 1; 
+			var yyyy = today.getFullYear();
+
+			if (dd < 10) {
+			  dd = '0' + dd;
+			}
+
+			if (mm < 10) {
+			  mm = '0' + mm;
+			}
+		  
+		  
+			this.callBackendAPI(jname,yyyy + '-' + mm + '-' + dd)
+				.then(res => !this.isCancelled && this.setState({lightData: {
+				labels: JSON.parse(res.data)[1]
+				,series: [
+				JSON.parse(res.data)[0]
+				]
+			}}))
+		  .catch(err => console.log(err));
+		}
+
+	};
   
   callBackendAPI = async (jname,jstate) => {
     
