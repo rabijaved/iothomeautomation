@@ -88,31 +88,7 @@ void postData(){
 
 void loop() {
 
+  postData();
+  delay(150000);
 
-postData();
-delay(150000);
-
-  
-/*
-  // Check if a client has connected
-  WiFiClient client = server.available();
-  if (client) {
-    while (client.connected()) {
-      if (client.available()) {
- 
-            lightVal = analogRead (analog_ip); // Analog Values 0 to 1023
-            int chk = DHT.read11(DHT11_PIN);
-            //Read data and store it to variables hum and temp
-            hum = DHT.humidity;
-            temp= DHT.temperature;    
-             // Return the response
-            String response = String(lightVal) + "|" + String(temp) + "|" + String(hum);
-            client.printf("HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: %u\r\n\r\n%s",
-                response.length(), response.c_str());          
-            client.flush();
-            }
-          }    
-      }
-
-*/
 }
