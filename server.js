@@ -2,15 +2,13 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 5000;
 
+//import scripts
 const backlightController = require('./scripts/js/backlightControl');
 const switchController = require('./scripts/js/switchControl');
 const motionController = require('./scripts/js/motionControl');
 const nodeMcuController = require('./scripts/js/nodeMcuLHTControl');
 
-
-
-
-
+//Initialize
 switchController.initializeSwitches(); //set all to off
 nodeMcuController.initalizeReadings();
 backlightController.piBacklightControlInitialize(); // Motion Sensor and Backlight Control
@@ -27,7 +25,7 @@ app.get('/express_backend', (req, res) => {
   var authheader = req.headers.authorization;
   
   console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState + ' ,Token: ' + authheader);
-  
+  //basic auth
   if(authheader == 'MGUzY2JhYzMtZDBkYy00N2FiLTk2YWEtMjc4NWIwNTU3MzQ2'){
 	  
 	  switch(jAction){
