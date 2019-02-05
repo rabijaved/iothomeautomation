@@ -6,8 +6,8 @@ dht DHT;
 //Constants
 #define DHT11_PIN 2     // Pin 2 D4
 
-const char* ssid = "Poop:ps"; //your WiFi Name
-const char* password = "28102018_Noor";  //Your Wifi Password
+const char* ssid = "*****"; //your WiFi Name
+const char* password = "*****";  //Your Wifi Password
 
 int lightVal  = 0;        //Variable to store analog input values
 const int analog_ip = A0; //Naming analog input pin
