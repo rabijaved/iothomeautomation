@@ -223,3 +223,9 @@ footer ul li a:hover {
         overflow-x: hidden;
     }
 }
+
+/*---------------------Modifications-------------------------------*/
+
+.react-date-picker__calendar {
+  z-index: 4;
+}
