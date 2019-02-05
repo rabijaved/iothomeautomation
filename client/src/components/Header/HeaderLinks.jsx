@@ -28,25 +28,7 @@ class HeaderLinks extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
-        <div className={classes.searchWrapper}>
-          <CustomInput
-            formControlProps={{
-              className: classes.margin + " " + classes.search
-            }}
-            inputProps={{
-              placeholder: "Search",
-              inputProps: {
-                "aria-label": "Search"
-              }
-            }}
-          />
-          <Button color="white" aria-label="edit" justIcon round>
-            <Search />
-          </Button>
-        </div>
-          
-      </div>
+      <div></div>
     );
   }
 }
