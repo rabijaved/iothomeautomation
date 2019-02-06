@@ -59,7 +59,7 @@ class Motion extends Component {
       height: '300px',
       axisX: {
 		 labelInterpolationFnc: function(value, index, labels) {
-		 return (index % Math.round(labels.length/20)) === 0 ? value : null;
+		 return (index % Math.round(labels.length/40)) === 0 ? value : null;
       },
       offset : 40
 	  },axisY: {

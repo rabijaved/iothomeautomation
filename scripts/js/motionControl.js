@@ -10,7 +10,7 @@ var self=module.exports = {
 
         if(jAction == '' || jAction == null || jAction.length > 10) return [];
 
-        var myQuery = "SELECT MT_VAL,strftime('%H:%M', DATECREATED) AS DATECREATED FROM MOTION_SENSOR WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= '" + jAction +"' ORDER BY DATECREATED ASC;";
+        var myQuery = "SELECT MT_VAL,strftime('%H:%M', DATECREATED) AS DATECREATED FROM MOTION_SENSOR WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
 
         var timeArray =[];
         var motionArray =[];

@@ -11,7 +11,7 @@ import ChartistGraph from "react-chartist";
 
 // @material-ui/core components
 import DatePicker from 'react-date-picker';
-
+var Chartist = require("chartist");
 
 
 class AmbLight extends Component {
@@ -58,7 +58,7 @@ class AmbLight extends Component {
       showPoint: false,
       axisX: {
 	 labelInterpolationFnc: function(value, index, labels) {
-	 return (index % Math.round(labels.length/20)) === 0 ? value : null;
+	 return (index % Math.round(labels.length/40)) === 0 ? value : null;
       },
       offset : 40
 },
@@ -147,7 +147,7 @@ class AmbLight extends Component {
                           <ChartistGraph
                           className="graphStyle"
                           data={this.state.lightData}
-                          type="Bar"
+                          type="Line"
                           options={this.lightChart.options}
                           listener={this.lightChart.animation}
                           />

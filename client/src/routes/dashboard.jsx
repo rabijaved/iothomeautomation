@@ -10,6 +10,7 @@ import DashboardPage from "views/Dashboard/Dashboard.jsx";
 import Switch from "views/Switch/Switch.jsx";
 import DHT11 from "views/DHT11/DHT11.jsx";
 import Motion from "views/Motion/Motion.jsx";
+import AmbLight from "views/AmbLight/AmbLight.jsx";
 
 const dashboardRoutes = [
   {
