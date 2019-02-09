@@ -1,0 +1,5 @@
+/*---------------------Modifications-------------------------------*/
+
+.react-date-picker__calendar {
+  z-index: 4;
+}
