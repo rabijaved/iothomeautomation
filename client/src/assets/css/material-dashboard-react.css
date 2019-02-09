@@ -224,8 +224,4 @@ footer ul li a:hover {
     }
 }
 
-/*---------------------Modifications-------------------------------*/
 
-.react-date-picker__calendar {
-  z-index: 4;
-}

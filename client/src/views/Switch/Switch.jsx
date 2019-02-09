@@ -34,7 +34,7 @@ function Switch(props) {
   return (
     <div>
       <GridContainer>
-        <GridItem xs={12} sm={6} md={3}>
+        <GridItem xs={6} sm={6} md={3}>
           <Card>
               <CardHeader>
               <GridItem xs={12} sm={12} md={6}>
@@ -48,7 +48,7 @@ function Switch(props) {
               </CardHeader>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
+        <GridItem xs={6} sm={6} md={3}>
           <Card>
               <CardHeader>
               <GridItem xs={12} sm={12} md={6}>
@@ -64,7 +64,7 @@ function Switch(props) {
         </GridItem>
       </GridContainer>
       <GridContainer>
-        <GridItem xs={12} sm={6} md={3}>
+        <GridItem xs={6} sm={6} md={3}>
           <Card>
               <CardHeader>
               <GridItem xs={12} sm={12} md={6}>
@@ -78,7 +78,7 @@ function Switch(props) {
               </CardHeader>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
+        <GridItem xs={6} sm={6} md={3}>
           <Card>
               <CardHeader>
               <GridItem xs={12} sm={12} md={6}>

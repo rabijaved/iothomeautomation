@@ -8,16 +8,9 @@ import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
-// react plugin for creating charts
+import DatePicker from 'react-date-picker';
 import ChartistGraph from "react-chartist";
-
-// @material-ui/core components
-import MenuList from "@material-ui/core/MenuList";
-import MenuItem from "@material-ui/core/MenuItem";
-import Paper from "@material-ui/core/Paper";
-import Popper from '@material-ui/core/Popper';
-import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
+import "assets/css/mods.css";
 
 // ##############################
 // // // javascript library for creating charts
@@ -30,12 +23,11 @@ class DHT11 extends Component {
   
   constructor() {
     super();
-    this.state = {myTemp: 0,myHumid: 0, anchorEl: null,open: false, periodSelected: 'Day', temperatureData: {labels: [],series: []}, humidityData: {labels: [],series: []}};
-    this.handleClick = this.handleClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
+    this.state = {myTemp: 0,myHumid: 0, periodSelected: new Date(), temperatureData: {labels: [],series: []}, humidityData: {labels: [],series: []}};
   }
   
   componentDidMount(){
+    this.setState({ periodSelected:new Date() });
     this.postToServer('dht11');
     this.postToServer('dht11graph');
     this.logReadings1Minute();
@@ -66,7 +58,8 @@ class DHT11 extends Component {
       showPoint: false,
       axisX: {
 	 labelInterpolationFnc: function(value, index, labels) {
-	 return (index % Math.round(labels.length/20)) === 0 ? value : null;
+			 var windowWidth = window.innerWidth;
+		 return (index % Math.round(labels.length/(40*(windowWidth/2100)))) === 0 ? value : null;
       },
       offset : 40
 },
@@ -77,31 +70,13 @@ class DHT11 extends Component {
   // // // Drop Down
   // #############################
   
-  
-  
-  handleClick = event => {
-    event.preventDefault();
-    const { currentTarget } = event;
-    this.setState(state => ({
-      anchorEl: currentTarget,
-      open: !state.open
-    }));
-    return false;
-  };
-  
-  handleClose = event => {
-    event.preventDefault(); 
-    
-    if (this.state.anchorEl.contains(event.target)) {
-      return false;
-    }
-    
-    this.setState({ open: false,periodSelected: event.target.id });
-    setTimeout(() => {
-        this.postToServer('dht11graph');
-    }, 2000)
-    
-  };
+ 
+	onDateChange = event => {
+		this.setState({ periodSelected: event});
+		setTimeout(() => {
+			this.postToServer('dht11graph');
+		}, 2000)
+    };
   
   // ##############################
   // // // AJAX POST
@@ -117,7 +92,20 @@ class DHT11 extends Component {
     }
     else if (jname === 'dht11graph'){
       
-      this.callBackendAPI(jname,this.state.periodSelected)
+		var today = this.state.periodSelected;
+		var dd = today.getDate();
+		var mm = today.getMonth() + 1; 
+		var yyyy = today.getFullYear();
+
+		if (dd < 10) {
+			dd = '0' + dd;
+		}
+
+		if (mm < 10) {
+			mm = '0' + mm;
+		}
+
+      this.callBackendAPI(jname,yyyy + '-' + mm + '-' + dd)
       .then(res => !this.isCancelled && this.setState({temperatureData: {
 	  labels: JSON.parse(res.data)[2]
 	  ,series: [
@@ -171,8 +159,6 @@ class DHT11 extends Component {
   
   render() {
     const classes = this.props;
-    const { anchorEl, open } = this.state;
-    const id = open ? 'simple-popper' : null;
     return (
       <div>
           <GridContainer>
@@ -242,26 +228,15 @@ class DHT11 extends Component {
                               <div style = {{fontSize: '18px', marginBottom: '20px'}}>
                                   <span>&nbsp;&nbsp;Humidity</span>
                               </div>
-                              <div style = {{float: 'left', marginLeft: '15px'}}>
-                                  <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Period:&nbsp;</b></span>
-                                  <Button style={{verticalAlign: '0.5px', background:'transparent',boxShadow: 'none', borderStyle : 'solid', borderWidth : '1px'}} aria-describedby={id} variant="contained" onClick={this.handleClick}>
-                                      <span style = {{fontSize: '15px', textTransform: 'capitalize', fontWeight: '300'}}>{this.state.periodSelected}</span>
-                                  </Button>
-                                  <Popper id={id} open={open} anchorEl={anchorEl} placement='right-start' transition>
-                                      {({ TransitionProps }) => (
-                                      <Fade {...TransitionProps} timeout={350}>
-                                          <Paper>
-                                              <MenuList role="menu">
-                                                  <MenuItem id="Day" onClick={this.handleClose} className={classes.dropdownItem}>Day</MenuItem>
-                                                  <MenuItem id="Week" onClick={this.handleClose} className={classes.dropdownItem}>Week</MenuItem>
-                                                  <MenuItem id="Month" onClick={this.handleClose} className={classes.dropdownItem}>Month</MenuItem>
-                                                  <MenuItem id="Year" onClick={this.handleClose} className={classes.dropdownItem}>Year</MenuItem>
-                                                  <MenuItem id="All" onClick={this.handleClose} className={classes.dropdownItem}>All</MenuItem>
-                                              </MenuList>
-                                          </Paper>
-                                      </Fade>
-                                      )}
-                                  </Popper>
+                              <div style = {{float: 'left', zIndex: '99', marginLeft: '15px'}}>
+                                  <span style = {{fontSize: '15px', textTransform: 'capitalize'}}><b>Date:</b></span>
+                                        <div>
+										<DatePicker
+										  onChange={this.onDateChange}
+										  maxDate={new Date()}
+										  value={this.state.periodSelected}
+										/>
+									  </div>
                               </div>
                           </div>
                       </CardBody>

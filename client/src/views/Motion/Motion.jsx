@@ -5,7 +5,7 @@ import GridContainer from "components/Grid/GridContainer.jsx";
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
-
+import "assets/css/mods.css";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 
@@ -57,9 +57,11 @@ class Motion extends Component {
         left: 0
       },
       height: '300px',
+      showPoint: false,
       axisX: {
 		 labelInterpolationFnc: function(value, index, labels) {
-		 return (index % Math.round(labels.length/40)) === 0 ? value : null;
+			 var windowWidth = window.innerWidth;
+		 return (index % Math.round(labels.length/(40*(windowWidth/2100)))) === 0 ? value : null;
       },
       offset : 40
 	  },axisY: {

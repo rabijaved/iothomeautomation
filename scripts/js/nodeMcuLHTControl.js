@@ -61,29 +61,8 @@ var self=module.exports = {
 
         if(jAction == '' || jAction == null) return [];
 
-        var myQuery = "SELECT TEMP,HUMID,DATECREATED FROM AL_DHT11";
+        var myQuery = "SELECT TEMP,HUMID,strftime('%H:%M', DATECREATED) AS DATECREATED FROM AL_DHT11 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
 
-            switch(jAction) {
-            case 'Day':
-            myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-1 day')";
-                break;
-            case 'Week':
-            myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-7 day')";
-                    break;
-            case 'Month':
-            myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-1 month')";
-                break;
-            case 'Year':
-            myQuery = myQuery + " WHERE DATECREATED > DATETIME('now','localtime','-1 year')";
-                    break;
-            case 'All':
-                    break;
-        default :
-            myQuery = "";
-            break;
-            }
-
-        if ( myQuery === "") return [];
         var timeArray =[];
         var tempArray =[];
         var humArray =[];
