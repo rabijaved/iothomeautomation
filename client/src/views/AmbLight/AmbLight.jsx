@@ -65,7 +65,7 @@ class AmbLight extends Component {
       offset : 40
 	  },axisY: {
 		 labelInterpolationFnc: function(value, index, labels) {
-		 return null;
+		 return value;
       }
 }
     }
