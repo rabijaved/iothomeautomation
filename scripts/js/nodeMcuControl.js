@@ -3,13 +3,7 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./SensorData.db'); 
 
 
-/*
-ALTER TABLE DHT11 ADD AMBLIGHT INT;
-UPDATE DHT11 SET AMBLIGHT = 0;
-ALTER TABLE DHT11 RENAME TO AL_DHT11;
-*/
-
-function LogtoDatabase(alight, temp, humid){
+function LogDHT11toDatabase(alight, temp, humid){
 
     try{
     db.run("INSERT INTO AL_DHT11(AMBLIGHT,TEMP, HUMID,DATECREATED) VALUES (" + alight+","+temp+","+humid+",datetime('now','localtime'))");  
@@ -17,17 +11,29 @@ function LogtoDatabase(alight, temp, humid){
 
 }
 
+function LogPlanttoDatabase(plantData){
+
+    try{
+    db.run("INSERT INTO PL_NODE1(SL_HUM,DATECREATED) VALUES (" + plantData+",datetime('now','localtime'))");  
+    }catch(err){console.log(err);}
+
+}
 
 var self=module.exports = {
 	tempReading: 0,
 	humidReading: 0,
 	ambientLightReading: 0,
+    plantNode1Data: 0,
+    setMcuPlantData: function(data){
+        self.plantNode1Data = data;
+        LogPlanttoDatabase(plantData);
+    },
 	setMcuLhtData: function(data){
 		var dataArray = data.split("|");
 		self.tempReading = dataArray[1];
 		self.humidReading=dataArray[2];
 		self.ambientLightReading=dataArray[0];
-		LogtoDatabase(dataArray[0], dataArray[1], dataArray[2]);
+		LogDHT11toDatabase(dataArray[0], dataArray[1], dataArray[2]);
 		
 	},
 	initalizeReadings: function(){
