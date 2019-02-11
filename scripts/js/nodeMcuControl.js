@@ -10,7 +10,13 @@ function LogDHT11toDatabase(alight, temp, humid){
     }catch(err){console.log(err);}
 
 }
+/*
+CREATE TABLE PL_NODE1(
+    SL_HUM INTEGER,
+    DATECREATED TEXT
+);
 
+*/
 function LogPlanttoDatabase(plantData){
 
     try{
