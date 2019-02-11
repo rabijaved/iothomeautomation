@@ -35,6 +35,9 @@ app.get('/express_backend', (req, res) => {
 				case "mculht":
 					nodeMcuController.setMcuLhtData(jState);
 					break;
+				case "mcuplant":
+					nodeMcuController.setMcuPlantData(jState);
+					break;
 				default:
 					switchController.setSwitch(jState, jName,res);
 					break;
