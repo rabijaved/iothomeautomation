@@ -6,7 +6,7 @@ const port = process.env.PORT || 5000;
 const backlightController = require('./scripts/js/backlightControl');
 const switchController = require('./scripts/js/switchControl');
 const motionController = require('./scripts/js/motionControl');
-const nodeMcuController = require('./scripts/js/nodeMcuLHTControl');
+const nodeMcuController = require('./scripts/js/nodeMcuControl');
 
 //Initialize
 switchController.initializeSwitches(); //set all to off
