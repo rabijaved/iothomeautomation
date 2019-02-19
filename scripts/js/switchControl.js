@@ -1,5 +1,5 @@
 const Gpio = require('onoff').Gpio;
-const nodeMcuController = require('./nodeMcuLHTControl');
+const nodeMcuController = require('./nodeMcuControl');
 
 
 //set up switches

@@ -10,13 +10,8 @@ function LogDHT11toDatabase(alight, temp, humid){
     }catch(err){console.log(err);}
 
 }
-/*
-CREATE TABLE PL_NODE1(
-    SL_HUM INTEGER,
-    DATECREATED TEXT
-);
 
-*/
+
 function LogPlanttoDatabase(plantData){
 
     try{
@@ -32,7 +27,7 @@ var self=module.exports = {
     plantNode1Data: 0,
     setMcuPlantData: function(data){
         self.plantNode1Data = data;
-        LogPlanttoDatabase(plantData);
+        LogPlanttoDatabase(data);
     },
 	setMcuLhtData: function(data){
 		var dataArray = data.split("|");
