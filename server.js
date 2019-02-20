@@ -55,6 +55,9 @@ app.get('/express_backend', (req, res) => {
 				case "amblightgraph":
 					nodeMcuController.getAmbLightData(jState,res);
 					break;
+				case "mcuplantgraph_1":
+					nodeMcuController.getPlantData(jState,res);
+					break;
 				default:
 					jState = switchController.getState(jName,res);
 					break;
