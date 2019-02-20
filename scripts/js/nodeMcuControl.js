@@ -52,7 +52,7 @@ var self=module.exports = {
     getAmbLightData:async function (jAction,res){
 
 
-        var myQuery = "SELECT (1023 - AMBLIGHT) AS AMBLIGHT,strftime('%H:%M', DATECREATED) AS DATECREATED FROM AL_DHT11 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
+        var myQuery = "SELECT (1024 - AMBLIGHT) AS AMBLIGHT,strftime('%H:%M', DATECREATED) AS DATECREATED FROM AL_DHT11 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
 
         var timeArray =[];
         var lightArray =[];
@@ -86,7 +86,7 @@ var self=module.exports = {
 
         if(jAction == '' || jAction == null) return [];
 
-        var myQuery = "SELECT SL_HUM,strftime('%H:%M', DATECREATED) AS DATECREATED FROM PL_NODE1 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
+        var myQuery = "SELECT (1024 - SL_HUM) AS SL_HUM,strftime('%H:%M', DATECREATED) AS DATECREATED FROM PL_NODE1 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
 
         var timeArray =[];
         var p1Array =[];
