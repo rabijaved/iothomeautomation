@@ -1,6 +1,7 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Copyright from "@material-ui/icons/Copyright";
+import PlantIcon from "@material-ui/icons/LocalFlorist";
 import Home from "@material-ui/icons/Home";
 import BrightnessMedium from "@material-ui/icons/BrightnessMedium";
 // import ContentPaste from "@material-ui/icons/ContentPaste";
@@ -49,7 +50,7 @@ const dashboardRoutes = [
   { path: "/plant",
     sidebarName: "Soil Moisture",
     navbarName: "Soil Moisture",
-    icon: BrightnessMedium,
+    icon: PlantIcon,
     component: Plant1
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
