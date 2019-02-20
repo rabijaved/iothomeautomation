@@ -11,6 +11,7 @@ import Switch from "views/Switch/Switch.jsx";
 import DHT11 from "views/DHT11/DHT11.jsx";
 import Motion from "views/Motion/Motion.jsx";
 import AmbLight from "views/AmbLight/AmbLight.jsx";
+import Plant1 from "views/Plant/PlantSensor_1.jsx";
 
 const dashboardRoutes = [
   {
@@ -39,11 +40,17 @@ const dashboardRoutes = [
     icon: Home,
     component: Motion
   },
-  { path: "/AmbLight",
+  { path: "/ambLight",
     sidebarName: "Light Intensity",
     navbarName: "Light Intensity",
     icon: BrightnessMedium,
     component: AmbLight
+  },
+  { path: "/plant",
+    sidebarName: "Soil Moisture",
+    navbarName: "Soil Moisture",
+    icon: BrightnessMedium,
+    component: Plant1
   },
   { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
 ];
