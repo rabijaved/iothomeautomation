@@ -81,5 +81,21 @@ var self=module.exports = {
         }, function(err, rows){ //callback for completion of .each method
             res.send({ data: JSON.stringify([tempArray,humArray,timeArray]) });
         });
+    },
+    getPlantData:async function (jAction,res){
+
+        if(jAction == '' || jAction == null) return [];
+
+        var myQuery = "SELECT SL_HUM,strftime('%H:%M', DATECREATED) AS DATECREATED FROM PL_NODE1 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
+
+        var timeArray =[];
+        var p1Array =[];
+
+        await db.each(myQuery, function(err, row) {
+            timeArray.push(row.DATECREATED);
+            p1Array.push(row.SL_HUM);
+        }, function(err, rows){ //callback for completion of .each method
+            res.send({ data: JSON.stringify([p1Array,timeArray]) });
+        });
     }
 }
