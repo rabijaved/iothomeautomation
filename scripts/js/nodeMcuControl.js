@@ -60,13 +60,14 @@ var self=module.exports = {
 
         var timeArray =[];
         var lightArray =[];
-
-        await db.each(myQuery, function(err, row) {
-            timeArray.push(row.DATECREATED);
-            lightArray.push(row.AMBLIGHT);
-        }, function(err, rows){ //callback for completion of .each method
-            res.send({ data: JSON.stringify([lightArray,timeArray]) });
-        });
+        try{
+            await db.each(myQuery, function(err, row) {
+                timeArray.push(row.DATECREATED);
+                lightArray.push(row.AMBLIGHT);
+            }, function(err, rows){ //callback for completion of .each method
+                res.send({ data: JSON.stringify([lightArray,timeArray]) });
+            });
+        }catch(err){console.log("DB ERROR 70: " + err);}
     },
     getDHT11Data:async function (jAction,res){
 
@@ -77,14 +78,15 @@ var self=module.exports = {
         var timeArray =[];
         var tempArray =[];
         var humArray =[];
-
-        await db.each(myQuery, function(err, row) {
-            timeArray.push(row.DATECREATED);
-            tempArray.push(row.TEMP);
-            humArray.push(row.HUMID);
-        }, function(err, rows){ //callback for completion of .each method
-            res.send({ data: JSON.stringify([tempArray,humArray,timeArray]) });
-        });
+        try{
+            await db.each(myQuery, function(err, row) {
+                timeArray.push(row.DATECREATED);
+                tempArray.push(row.TEMP);
+                humArray.push(row.HUMID);
+            }, function(err, rows){ //callback for completion of .each method
+                res.send({ data: JSON.stringify([tempArray,humArray,timeArray]) });
+            });
+        }catch(err){console.log("DB ERROR 88: " + err);}
     },
     getPlantData:async function (jAction,res){
 
@@ -94,12 +96,13 @@ var self=module.exports = {
 
         var timeArray =[];
         var p1Array =[];
-
-        await db.each(myQuery, function(err, row) {
-            timeArray.push(row.DATECREATED);
-            p1Array.push(row.SL_HUM);
-        }, function(err, rows){ //callback for completion of .each method
-            res.send({ data: JSON.stringify([p1Array,timeArray]) });
-        });
+        try{
+            await db.each(myQuery, function(err, row) {
+                timeArray.push(row.DATECREATED);
+                p1Array.push(row.SL_HUM);
+            }, function(err, rows){ //callback for completion of .each method
+                res.send({ data: JSON.stringify([p1Array,timeArray]) });
+            });
+        }catch(err){console.log("DB ERROR 104: " + err);}
     }
 }
