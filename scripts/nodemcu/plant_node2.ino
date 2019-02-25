@@ -11,6 +11,7 @@ int plantVal  = 0;        //Variable to store analog input values
 const int analog_ip = A0; //Naming analog input pin
 const char* host="http://192.168.1.108:5000/";
 const int retryCount = 5;
+int pumpPin = 13; // GPIO13---D7 of NodeMCU
 
 WiFiServer server(80);
  
@@ -18,6 +19,8 @@ void setup() {
   Serial.begin(115200);
   delay(10);
  
+  pinMode(pumpPin, OUTPUT);
+  digitalWrite(pumpPin, LOW);
   // Connect to WiFi network
   Serial.println();
   Serial.println();
@@ -74,6 +77,22 @@ void getCommand(struct pt *pt, int interval){
           Serial.println(request);
           client.flush();
 
+          int value = LOW;
+          if (request.indexOf("/PUMP=ON") != -1)  {
+            digitalWrite(pumpPin, HIGH);
+            value = HIGH;
+          }
+          if (request.indexOf("/PUMP=OFF") != -1)  {
+            digitalWrite(pumpPin, LOW);
+            value = LOW;
+          }
+
+          if(value == HIGH) {
+            postResponse("On");
+          } else {
+            postResponse("Off");
+          }
+
       }
     }
 
@@ -81,7 +100,7 @@ void getCommand(struct pt *pt, int interval){
   PT_END(pt);
 }
 
-void postResponse(int setStatus){
+void postResponse(String setStatus){
 
   String pData = "express_backend?jname=mcuplant_pump&jstate="+setStatus+"&jaction=set";
 
