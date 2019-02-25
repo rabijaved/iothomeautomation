@@ -54,7 +54,7 @@ String readSensors(){
 
   plantVal = analogRead (analog_ip); // Analog Values 0 to 1023
   
-  if(plantVal >= 0 && plantVal <= 1023) return String(plantVal);
+  if(plantVal >= 0 && plantVal <= 1024) return String(plantVal);
   else return "invalid";
 
 }
