@@ -109,10 +109,15 @@ function piBacklightControl(){
 			 if(motionSensor === 1) writeDelayValue = 1;
 		}
 		else if (wrtieDelayCounter >= dbWriteDelay){
-			
-			db.run("INSERT INTO MOTION_SENSOR(MT_VAL,DATECREATED) VALUES (" + writeDelayValue+ ",datetime('now','localtime'))");
-			wrtieDelayCounter = 0;
-			writeDelayValue = 0;  
+			try{
+				db.run("INSERT INTO MOTION_SENSOR(MT_VAL,DATECREATED) VALUES (" + writeDelayValue+ ",datetime('now','localtime'))");
+			}catch(err){
+				console.log("DB ERROR 115: " + err);
+			}
+			finally{
+				wrtieDelayCounter = 0;
+				writeDelayValue = 0;  
+			}
 		}
 		piBacklightControl();
 	
