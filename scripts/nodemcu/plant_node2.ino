@@ -70,6 +70,20 @@ void getCommand(struct pt *pt, int interval){
   PT_END(pt);
 }
 
+void postResponse(int setStatus){
+
+  String pData = "express_backend?jname=mcuplant_pump&jstate="+setStatus+"&jaction=set";
+
+  HTTPClient http;
+  http.begin(host+pData);
+  http.addHeader("Authorization", String(base64::encode("0e3cbac3-d0dc-47ab-96aa-2785b0557346")));
+  http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+  http.GET();
+  http.writeToStream(&Serial);
+  http.end();
+
+}
+
 void postData(struct pt *pt, int interval){
   static unsigned long timestamp = 0;
   PT_BEGIN(pt);
