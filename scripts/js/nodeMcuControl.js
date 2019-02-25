@@ -7,8 +7,10 @@ function LogDHT11toDatabase(alight, temp, humid){
 
     try{
     db.run("INSERT INTO AL_DHT11(AMBLIGHT,TEMP, HUMID,DATECREATED) VALUES (" + alight+","+temp+","+humid+",datetime('now','localtime'))");  
-    }catch(err){console.log(err);}
-
+    }catch(err){console.log("DB ERROR 10: " + err);}
+    finally{
+        return;
+    }
 }
 
 
@@ -16,8 +18,10 @@ function LogPlanttoDatabase(plantData){
 
     try{
     db.run("INSERT INTO PL_NODE1(SL_HUM,DATECREATED) VALUES (" + plantData+",datetime('now','localtime'))");  
-    }catch(err){console.log(err);}
-
+    }catch(err){console.log("DB ERROR 21: " + err);}
+    finally{
+        return;
+    }
 }
 
 var self=module.exports = {
