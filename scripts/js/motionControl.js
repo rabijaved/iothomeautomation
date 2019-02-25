@@ -14,12 +14,13 @@ var self=module.exports = {
 
         var timeArray =[];
         var motionArray =[];
-
-        await db.each(myQuery, function(err, row) {
-            timeArray.push(row.DATECREATED);
-            motionArray.push(row.MT_VAL);
-        }, function(err, rows){ //callback for completion of .each method
-            res.send({ data: JSON.stringify([motionArray,timeArray]) });
-        });
+        try{
+            await db.each(myQuery, function(err, row) {
+                timeArray.push(row.DATECREATED);
+                motionArray.push(row.MT_VAL);
+            }, function(err, rows){ //callback for completion of .each method
+                res.send({ data: JSON.stringify([motionArray,timeArray]) });
+            });
+        }catch(err){console.log("DB ERROR 24: " + err);}
     }
 };
