@@ -50,7 +50,8 @@ void setup() {
 }
 
 String readSensors(){
-
+  DHT.read11(DHT11_PIN);
+  delay(1);
   int chk = DHT.read11(DHT11_PIN);
 
   int readRetry = 0;
@@ -63,7 +64,9 @@ String readSensors(){
 
   hum = DHT.humidity;
   temp= DHT.temperature;  
-  lightVal = analogRead (analog_ip); // Analog Values 0 to 1023
+  lightVal = analogRead (analog_ip); // Analog Values 0 to 1024
+
+   if(!(lightVal >= 0 && lightVal <=1024)) return "invalid";
 
   return String(lightVal) + "|" + String(temp) + "|" + String(hum);
 }
