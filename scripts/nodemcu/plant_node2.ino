@@ -65,6 +65,17 @@ void getCommand(struct pt *pt, int interval){
 
     PT_WAIT_UNTIL(pt, millis() - timestamp > interval );
     timestamp = millis(); // take a new timestamp
+    WiFiClient client = server.available();
+
+    if (client) {
+      if(client.available()){
+          // Read the first line of the request
+          String request = client.readStringUntil('\r');
+          Serial.println(request);
+          client.flush();
+
+      }
+    }
 
   }
   PT_END(pt);
