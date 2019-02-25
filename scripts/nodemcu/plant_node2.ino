@@ -1,7 +1,9 @@
 #include <ESP8266WiFi.h> 
 #include <ESP8266HTTPClient.h>
 #include <Base64.h>
+#include <pt.h> //include protothread library
 
+static struct pt pt1,pt2;
 const char* ssid = "*****"; //your WiFi Name
 const char* password = "*****";  //Your Wifi Password
 
@@ -41,6 +43,8 @@ void setup() {
   Serial.print(WiFi.localIP());
   Serial.println("/");
  
+  PT_INIT(&pt1);
+  PT_INIT(&pt2)
 }
 
 String readSensors(){
