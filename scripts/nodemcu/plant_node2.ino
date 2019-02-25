@@ -44,7 +44,7 @@ void setup() {
   Serial.println("/");
  
   PT_INIT(&pt1);
-  PT_INIT(&pt2)
+  PT_INIT(&pt2);
 }
 
 String readSensors(){
@@ -57,26 +57,48 @@ String readSensors(){
 }
 
 
-void postData(){
+void getCommand(struct pt *pt, int interval){
+  static unsigned long timestamp = 0;
+  PT_BEGIN(pt);
 
-  String sensorReading = readSensors();
+  while(1) {
 
-  if(sensorReading != "invalid"){
-    String pData = "express_backend?jname=mcuplant&jstate="+sensorReading+"&jaction=set";
+    PT_WAIT_UNTIL(pt, millis() - timestamp > interval );
+    timestamp = millis(); // take a new timestamp
 
-    HTTPClient http;
-    http.begin(host+pData);
-    http.addHeader("Authorization", String(base64::encode("0e3cbac3-d0dc-47ab-96aa-2785b0557346")));
-    http.addHeader("Content-Type", "application/x-www-form-urlencoded");
-    http.GET();
-    http.writeToStream(&Serial);
-    http.end();
   }
+  PT_END(pt);
+}
+
+void postData(struct pt *pt, int interval){
+  static unsigned long timestamp = 0;
+  PT_BEGIN(pt);
+
+   while(1) {
+
+    PT_WAIT_UNTIL(pt, millis() - timestamp > interval );
+    timestamp = millis(); // take a new timestamp
+
+    String sensorReading = readSensors();
+
+    if(sensorReading != "invalid"){
+      String pData = "express_backend?jname=mcuplant&jstate="+sensorReading+"&jaction=set";
+
+      HTTPClient http;
+      http.begin(host+pData);
+      http.addHeader("Authorization", String(base64::encode("0e3cbac3-d0dc-47ab-96aa-2785b0557346")));
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+      http.GET();
+      http.writeToStream(&Serial);
+      http.end();
+    }
+  }
+  PT_END(pt);
 }
 
 void loop() {
 
-  postData();
-  delay(150000);
+  postData(&pt1,150000);
+  getCommand(&pt2,100);
 
 }
