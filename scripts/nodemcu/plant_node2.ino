@@ -56,7 +56,7 @@ String readSensors(){
 }
 
 
-void getCommand(struct pt *pt, int interval){
+void getCommand(int interval){
   static unsigned long timestamp = 0;
 
   while(1) {
@@ -113,7 +113,8 @@ void postData(int interval){
 
    while(1) {
 
-    PT_WAIT_UNTIL(pt, millis() - timestamp > interval );
+    if (CheckExecutionTime()) return;
+
     timestamp = millis(); // take a new timestamp
 
     String sensorReading = readSensors();
