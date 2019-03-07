@@ -11,7 +11,7 @@ const backlightEaseDuration = 45;
 
 var backlightState = 0;
 var backlightLock = 0;
-const dbWriteDelay = 60; //20 x 500 = 10000 ms
+const dbWriteDelay = 60; //60 x 500 = 30000 ms = 30 s
 var wrtieDelayCounter = 0;
 var writeDelayValue = 0;
 
