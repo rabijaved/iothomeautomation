@@ -10,8 +10,15 @@ const switch4 = new Gpio(18, 'out');
 
 
 
-module.exports = {
-
+var self=module.exports = {
+    switch1State: 1,
+    switch2State: 1,
+    switch3State: 1,
+    switch4State: 1,
+    switch1StateDate: '',
+    switch2StateDate: '',
+    switch3StateDate: '',
+    switch4StateDate: '',
     initializeSwitches:function(){
 
         switch1.writeSync(1);
@@ -45,27 +52,56 @@ module.exports = {
 
         res.send({ jstate: sState, jname: sName });
     },
-
-
-
     setSwitch:function (sState, sName, res){
 
         switch(sName) {
         case 'switch1':
-            if(sState == 'true') switch1.writeSync(1);
-            else if(sState == 'false') switch1.writeSync(0);
+            if(sState == 'true') {
+                switch1.writeSync(1);
+                self.switch1State = 1;
+                self.switch1StateDate = new Date();
+            }
+            else if(sState == 'false') {
+                switch1.writeSync(0);
+                self.switch1State = 0;
+                self.switch1StateDate = new Date();
+            }
             break;
         case 'switch2':
-            if(sState == 'true') switch2.writeSync(1);
-            else if(sState == 'false') switch2.writeSync(0);
+            if(sState == 'true') {
+                switch2.writeSync(1);
+                self.switch2State = 1;
+                self.switch2StateDate = new Date();
+            }
+            else if(sState == 'false') {
+                switch2.writeSync(0);
+                self.switch2State = 0;
+                self.switch2StateDate = new Date();
+            }
             break;
         case 'switch3':
-            if(sState == 'true') switch3.writeSync(1);
-            else if(sState == 'false') switch3.writeSync(0);
+            if(sState == 'true') {
+                switch3.writeSync(1);
+                self.switch3State = 1;
+                self.switch3StateDate = new Date();
+            }
+            else if(sState == 'false') {
+                switch3.writeSync(0);
+                self.switch3State = 0;
+                self.switch3StateDate = new Date();
+            }
             break;
         case 'switch4':
-            if(sState == 'true') switch4.writeSync(1);
-            else if(sState == 'false') switch4.writeSync(0);
+            if(sState == 'true') {
+                switch4.writeSync(1);
+                self.switch4State = 1;
+                self.switch4StateDate = new Date();
+            }
+            else if(sState == 'false') {
+                switch4.writeSync(0);
+                self.switch4State = 0;
+                self.switch4StateDate = new Date();
+            }
             break;
         }
 
