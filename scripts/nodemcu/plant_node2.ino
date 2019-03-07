@@ -1,9 +1,7 @@
 #include <ESP8266WiFi.h> 
 #include <ESP8266HTTPClient.h>
 #include <Base64.h>
-#include <pt.h> //include protothread library
 
-static struct pt pt1,pt2;
 const char* ssid = "*****"; //your WiFi Name
 const char* password = "*****";  //Your Wifi Password
 
@@ -46,12 +44,10 @@ void setup() {
   Serial.print(WiFi.localIP());
   Serial.println("/");
  
-  PT_INIT(&pt1);
-  PT_INIT(&pt2);
 }
 
 String readSensors(){
-
+  analogRead (analog_ip);
   plantVal = analogRead (analog_ip); // Analog Values 0 to 1024
   
   if(plantVal >= 0 && plantVal <= 1024) return String(plantVal);
@@ -62,7 +58,6 @@ String readSensors(){
 
 void getCommand(struct pt *pt, int interval){
   static unsigned long timestamp = 0;
-  PT_BEGIN(pt);
 
   while(1) {
 
@@ -97,7 +92,6 @@ void getCommand(struct pt *pt, int interval){
     }
 
   }
-  PT_END(pt);
 }
 
 void postResponse(String setStatus){
@@ -114,9 +108,8 @@ void postResponse(String setStatus){
 
 }
 
-void postData(struct pt *pt, int interval){
+void postData(int interval){
   static unsigned long timestamp = 0;
-  PT_BEGIN(pt);
 
    while(1) {
 
@@ -137,12 +130,11 @@ void postData(struct pt *pt, int interval){
       http.end();
     }
   }
-  PT_END(pt);
 }
 
 void loop() {
 
-  postData(&pt1,150000);
-  getCommand(&pt2,100);
+  postData(150000);
+  getCommand(100);
 
 }
