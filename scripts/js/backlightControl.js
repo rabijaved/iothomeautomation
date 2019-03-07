@@ -15,8 +15,9 @@ const dbWriteDelay = 60; //60 x 500 = 30000 ms = 30 s
 var wrtieDelayCounter = 0;
 var writeDelayValue = 0;
 
-module.exports = {
+var self = module.exports = {
 //Entry point to backlight control
+	sensorHistory = [],
     piBacklightControlInitialize : function(){
         
         rpiBacklight.isPoweredOn().then((powerStatus) => {
