@@ -29,6 +29,7 @@ var self=module.exports = {
 	humidReading: 0,
 	ambientLightReading: 0,
     plantNode1Data: 0,
+    readingDate: '',
     setMcuPlantData: function(data){
         self.plantNode1Data = data;
         LogPlanttoDatabase(data);
@@ -38,6 +39,7 @@ var self=module.exports = {
 		self.tempReading = dataArray[1];
 		self.humidReading=dataArray[2];
 		self.ambientLightReading=dataArray[0];
+        self.readingDate=new Date();
 		LogDHT11toDatabase(dataArray[0], dataArray[1], dataArray[2]);
 		
 	},
