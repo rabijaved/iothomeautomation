@@ -18,7 +18,7 @@ var self=module.exports = {
             }, function(err, rows){ //callback for completion of .each method
                 res.send({ data: JSON.stringify([motionArray,timeArray]) });
             });
-        }catch(err){console.log("DB ERROR 24: " + err);}
+        }catch(err){console.log("DB ERROR :getMotionData: " + err);}
     }
     
 }

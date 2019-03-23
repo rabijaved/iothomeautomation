@@ -53,7 +53,7 @@ class ToggleSwitch extends Component {
   render() {
     return (
     <div>
-    <div style = {{fontSize: '18px', textAlign: 'center', width: '185px', paddingBottom: '5px'}}>{this.props.name}</div>
+    <div style = {{fontSize: '18px', textAlign: 'center', width: '165px', paddingBottom: '5px'}}>{this.props.name}</div>
     <div style = {{height: '50',display: 'flex', alignItems: 'center'}}>
 	    <span style = {{fontSize: '15px', margin: '0'}}>On&nbsp;</span>
 

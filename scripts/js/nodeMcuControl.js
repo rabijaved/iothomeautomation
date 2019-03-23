@@ -7,10 +7,8 @@ function LogDHT11toDatabase(alight, temp, humid){
 
     try{
     db.run("INSERT INTO AL_DHT11(AMBLIGHT,TEMP, HUMID,DATECREATED) VALUES (" + alight+","+temp+","+humid+",datetime('now','localtime'))");  
-    }catch(err){console.log("DB ERROR 10: " + err);}
-    finally{
-        return;
-    }
+    }catch(err){console.log("DB ERROR :LogDHT11toDatabase: " + err);}
+
 }
 
 
@@ -18,10 +16,8 @@ function LogPlanttoDatabase(plantData){
 
     try{
     db.run("INSERT INTO PL_NODE1(SL_HUM,DATECREATED) VALUES (" + plantData+",datetime('now','localtime'))");  
-    }catch(err){console.log("DB ERROR 21: " + err);}
-    finally{
-        return;
-    }
+    }catch(err){console.log("DB ERROR :LogPlanttoDatabase: " + err);}
+
 }
 
 var self=module.exports = {
@@ -69,7 +65,7 @@ var self=module.exports = {
             }, function(err, rows){ //callback for completion of .each method
                 res.send({ data: JSON.stringify([lightArray,timeArray]) });
             });
-        }catch(err){console.log("DB ERROR 70: " + err);}
+        }catch(err){console.log("DB ERROR :getAmbLightData: " + err);}
     },
     getDHT11Data:async function (jAction,res){
 
@@ -88,7 +84,7 @@ var self=module.exports = {
             }, function(err, rows){ //callback for completion of .each method
                 res.send({ data: JSON.stringify([tempArray,humArray,timeArray]) });
             });
-        }catch(err){console.log("DB ERROR 88: " + err);}
+        }catch(err){console.log("DB ERROR :getDHT11Data: " + err);}
     },
     getPlantData:async function (jAction,res){
 
@@ -105,6 +101,6 @@ var self=module.exports = {
             }, function(err, rows){ //callback for completion of .each method
                 res.send({ data: JSON.stringify([p1Array,timeArray]) });
             });
-        }catch(err){console.log("DB ERROR 104: " + err);}
+        }catch(err){console.log("DB ERROR :getPlantData: " + err);}
     }
 }

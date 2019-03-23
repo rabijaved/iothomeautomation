@@ -17,7 +17,6 @@ var writeDelayValue = 0;
 
 var self = module.exports = {
 //Entry point to backlight control
-	sensorHistory = [],
     piBacklightControlInitialize : function(){
         
         rpiBacklight.isPoweredOn().then((powerStatus) => {
@@ -113,7 +112,7 @@ function piBacklightControl(){
 			try{
 				db.run("INSERT INTO MOTION_SENSOR(MT_VAL,DATECREATED) VALUES (" + writeDelayValue+ ",datetime('now','localtime'))");
 			}catch(err){
-				console.log("DB ERROR 115: " + err);
+				console.log("DB ERROR :piBacklightControl: " + err);
 			}
 			finally{
 				wrtieDelayCounter = 0;
