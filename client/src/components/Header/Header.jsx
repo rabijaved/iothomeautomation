@@ -40,7 +40,13 @@ function Header({ ...props }) {
           </Button>
         </div>
         <Hidden smDown implementation="css">
-          <HeaderLinks />
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={props.handleDrawerToggle}
+          >
+            <Menu />
+          </IconButton>
         </Hidden>
         <Hidden mdUp implementation="css">
           <IconButton

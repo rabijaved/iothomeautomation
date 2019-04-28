@@ -26,6 +26,7 @@ const Sidebar = ({ ...props }) => {
     <List className={classes.list}>
       {routes.map((prop, key) => {
         if (prop.redirect) return null;
+        if (prop.redirectMobile) return null;
         var activePro = " ";
         var listItemClasses;
         if (prop.path === "/upgrade-to-pro") {
@@ -107,15 +108,22 @@ const Sidebar = ({ ...props }) => {
       </Hidden>
       <Hidden smDown implementation="css">
         <Drawer
-          anchor="left"
-          variant="permanent"
-          open
+          variant="temporary"
+          anchor="right"
+          open={props.open}
           classes={{
             paper: classes.drawerPaper
           }}
+          onClose={props.handleDrawerToggle}
+          ModalProps={{
+            keepMounted: true // Better open performance on mobile.
+          }}
         >
           {brand}
-          <div className={classes.sidebarWrapper}>{links}</div>
+          <div className={classes.sidebarWrapper}>
+            <HeaderLinks />
+            {links}
+          </div>
           {image !== undefined ? (
             <div
               className={classes.background}

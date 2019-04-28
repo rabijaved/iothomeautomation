@@ -53,7 +53,7 @@ const dashboardRoutes = [
     icon: PlantIcon,
     component: Plant1
   },
-  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
+  { redirect: true, path: "/", to: "/dashboard", mobile: "/switch" ,navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;

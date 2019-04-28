@@ -17,7 +17,7 @@ const sidebarStyle = theme => ({
     position: "fixed",
     top: "0",
     bottom: "0",
-    left: "0",
+    //left: "0",
     zIndex: "1",
     ...boxShadow,
     width: drawerWidth,
