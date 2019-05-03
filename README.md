@@ -26,4 +26,4 @@ Within the download you'll find the following directories and files:
 ```
 
 ## Architecture
-![alt text](./Architecture.png)
+![alt text](./resources/Architecture.png)
