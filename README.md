@@ -21,7 +21,9 @@ Within the download you'll find the following directories and files:
         ├── switchControl.js
 └── client
         ├── README.md
-└── node_modules
+├── node_modules
+├── resources
+└── bootScript.sh
 
 ```
 
@@ -30,3 +32,6 @@ Within the download you'll find the following directories and files:
 
 ## Dashboard Interface
 ![alt text](./resources/Main.png)
+
+## Temperature & Humidity Interface
+![alt text](./resources/DHT11.png)
