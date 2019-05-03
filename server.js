@@ -21,6 +21,7 @@ app.get('/express_backend', (req, res) => {
   var jName = req.query['jname'];
   var jState = req.query['jstate'];
   var jAction = req.query['jaction'];
+  var jToken = req.query['jtoken'];
   
   var authheader = req.headers.authorization;
   
@@ -64,6 +65,12 @@ app.get('/express_backend', (req, res) => {
 			}
 			break;
 	  };
+} else if (jToken == "MGUzY2JhYzMtZDBkYy00N2FiLTk2YWEtMjc4NWIwNTU3MzQ2"){ 
+	//This request is from the GoogleHome IFTTT
+	//It does not support authHeader token so handle it seperately
+	if(jAction == "set" && jName.match(/switch.*/)){
+		switchController.setSwitch(jState, jName,res);
+	}
 }
   
 });
