@@ -34,4 +34,3 @@ Within the download you'll find the following directories and files:
 ![alt text](./resources/Main.png)
 
 ## Temperature & Humidity Interface
-![alt text](./resources/DHT11.png)
