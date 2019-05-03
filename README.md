@@ -27,3 +27,8 @@ Within the download you'll find the following directories and files:
 
 ## Architecture
 ![alt text](./resources/Architecture.png)
+
+##Interfaces
+
+#Dashboard
+![alt text](./resources/Main.png)
