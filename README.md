@@ -30,5 +30,5 @@ Within the download you'll find the following directories and files:
 
 ##Interfaces
 
-#Dashboard
+Dashboard
 ![alt text](./resources/Main.png)
