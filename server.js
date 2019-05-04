@@ -25,10 +25,10 @@ app.get('/express_backend', (req, res) => {
   
   var authheader = req.headers.authorization;
   
-  console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState + ' ,Token: ' + authheader);
+  
   //basic auth
   if(authheader == 'MGUzY2JhYzMtZDBkYy00N2FiLTk2YWEtMjc4NWIwNTU3MzQ2'){
-	  
+	  console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState + ' ,Token: ' + authheader);
 	  switch(jAction){
 		  //---------------------------SET------------------------------
 		  case "set":
@@ -68,7 +68,11 @@ app.get('/express_backend', (req, res) => {
 } else if (jToken == "MGUzY2JhYzMtZDBkYy00N2FiLTk2YWEtMjc4NWIwNTU3MzQ2"){ 
 	//This request is from the GoogleHome IFTTT
 	//It does not support authHeader token so handle it seperately
+    console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState + ' ,Token: googleAssistant');
 	if(jAction == "set" && jName.match(/switch.*/)){
+		if(jState.toLowerCase().trim() == "on") jState = "false";
+		else if (jState.toLowerCase().trim() == "off") jState = "true";
+		
 		switchController.setSwitch(jState, jName,res);
 	}
 }
