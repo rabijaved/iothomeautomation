@@ -27,7 +27,7 @@ Within the download you'll find the following directories and files:
 
 ```
 
-## Architecture
+## Hardware Setup
 ![alt text](./resources/HardwareArch.png)
 
 ## Preview
