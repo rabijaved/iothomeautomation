@@ -1,10 +1,14 @@
 #include <ESP8266WiFi.h> 
 #include <ESP8266HTTPClient.h>
-#include <dht.h>
+#include <DHT.h>
 #include <Base64.h>
-dht DHT;
+
 //Constants
-#define DHT11_PIN 2     // Pin 2 D4
+#define DHTPIN 4     // what pin we're connected to
+#define DHTTYPE DHT22   // DHT 22  (AM2302)
+DHT dht(DHTPIN, DHTTYPE); //// Initialize DHT sensor for normal 16mhz Arduino
+
+
 
 const char* ssid = "*****"; //your WiFi Name
 const char* password = "*****";  //Your Wifi Password
@@ -13,15 +17,16 @@ int lightVal  = 0;        //Variable to store analog input values
 const int analog_ip = A0; //Naming analog input pin
 float hum;  //Stores humidity value
 float temp; //Stores temperature value
-const char* host="http://192.168.1.108:5000/";
+const char* host="http://192.168.1.101:5000/";
 const int retryCount = 5;
+float prevTemp = 0;
+float prevHum = 0;
 
 WiFiServer server(80);
  
 void setup() {
   Serial.begin(115200);
-  delay(10);
- 
+
   // Connect to WiFi network
   Serial.println();
   Serial.println();
@@ -46,28 +51,77 @@ void setup() {
   Serial.print("http://");
   Serial.print(WiFi.localIP());
   Serial.println("/");
- 
+
+  //Get initial reading
+  dht.begin();
+  
+  prevHum = dht.readHumidity();
+  prevTemp= dht.readTemperature();  
+
+  if (isnan(hum) || isnan(temp)) {
+    prevHum = 0;
+    prevTemp = 0;
+  }
+  Serial.println("Initial DHT reading: " +String(prevTemp) + "|" + String(prevHum));
 }
 
 String readSensors(){
-  DHT.read11(DHT11_PIN);
-  delay(1);
-  int chk = DHT.read11(DHT11_PIN);
 
-  int readRetry = 0;
-  while(chk!=DHTLIB_OK){
-    delay(10);
-    chk = DHT.read11(DHT11_PIN);
-    readRetry++;
-    if(readRetry >= retryCount) return "invalid";
+
+  //if temperature or hum difference is too big then get another reading
+  hum = dht.readHumidity();
+  temp= dht.readTemperature();  
+   int retryCount = 0;
+   while (isnan(hum) || isnan(temp)) {
+      delay(2000);
+      if (retryCount >= 3) {
+        Serial.println("Failed to read from DHT sensor! Exiting function...");
+        return "invalid";
+      }
+      Serial.println("Failed to read from DHT sensor! Retrying...");
+      hum = dht.readHumidity();
+      temp= dht.readTemperature();  
+      retryCount++;
+      
+    }
+    
+  int diffRetry = 0;
+  while((abs(temp-prevTemp) >= 0.5) || (abs(hum-prevHum) >= 5)){
+    delay(2000);
+
+    if (diffRetry >= 2) {
+      Serial.println("Failed to get DHT reading in range! Proceeding...");
+      break;
+    }
+
+    Serial.println("Failed to get DHT reading in range! Retrying...");
+    hum = dht.readHumidity();
+    temp= dht.readTemperature();  
+
+   int retryCount = 0;
+   while (isnan(hum) || isnan(temp)) {
+      delay(2000);
+      if (retryCount >= 3) {
+        Serial.println("Failed to read from DHT sensor! Exiting function...");
+        return "invalid";
+      }
+      Serial.println("Failed to read from DHT sensor! Retrying...");
+      hum = dht.readHumidity();
+      temp= dht.readTemperature();  
+      retryCount++;
+      
+    }
+
+    diffRetry++;
   }
 
-  hum = DHT.humidity;
-  temp= DHT.temperature;  
+
   lightVal = analogRead (analog_ip); // Analog Values 0 to 1024
+  prevTemp = temp;
+  prevHum = hum;
 
-   if(!(lightVal >= 0 && lightVal <=1024)) return "invalid";
-
+  if(!(lightVal >= 0 && lightVal <=1024)) lightVal = 0;
+  
   return String(lightVal) + "|" + String(temp) + "|" + String(hum);
 }
 
@@ -75,7 +129,7 @@ String readSensors(){
 void postData(){
 
   String sensorReading = readSensors();
-
+  Serial.println(sensorReading);
   if(sensorReading != "invalid"){
     String pData = "express_backend?jname=mculht&jstate="+sensorReading+"&jaction=set";
 
@@ -90,8 +144,7 @@ void postData(){
 }
 
 void loop() {
-
   postData();
   delay(150000);
-
+  
 }

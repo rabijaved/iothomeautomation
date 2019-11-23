@@ -35,7 +35,7 @@ class Dashboard extends React.Component {
     
     if(jname === 'dht11'){
       this.callBackendAPI(jname,'void')
-      .then(res => !this.isCancelled && this.setState({myHumid: (res.jstate.split(",")[0]), myTemp: (res.jstate.split(",")[1])}))
+      .then(res => !this.isCancelled && this.setState({myHumid: (res.data.split(",")[0]), myTemp: (res.data.split(",")[1])}))
       .catch(err => console.log(err));
     }
     
@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
       
     }else
     {
-      if(jname === 'dht11') body = {jstate: '0,0'};
+      if(jname === 'dht11') body = {data: '0,0'};
       else body = {};
     }
     return body;

@@ -87,7 +87,7 @@ class DHT11 extends Component {
     
     if(jname === 'dht11'){
       this.callBackendAPI(jname,'void')
-      .then(res => !this.isCancelled && this.setState({myHumid: (res.jstate.split(",")[0]), myTemp: (res.jstate.split(",")[1])}))
+      .then(res => !this.isCancelled && this.setState({myHumid: (res.data.split(",")[0]), myTemp: (res.data.split(",")[1])}))
       .catch(err => console.log(err));
     }
     else if (jname === 'dht11graph'){
@@ -135,10 +135,10 @@ class DHT11 extends Component {
     if (response.status === 200) {
       
       body = await response.json();
-      
+
     }else
     {
-      if(jname === 'dht11') body = {jstate: '0,0'};
+      if(jname === 'dht11') body = {data: "0,0"};
       else if (jname === 'dht11graph') body = {};
     }
     return body;

@@ -1,53 +1,58 @@
 import React, { Component } from "react";
 import Switch from "react-switch";
+import io from 'socket.io-client';
+const socket = io();
  
  
 class ToggleSwitch extends Component {
 
+
+  subscribeToUpdates(cb) {
+	socket.on('setServerUpdate', data => cb(null, data));
+  } 
+
+
+  sendSwitchData(switchName, switchState){
+
+	var sendata = {
+		jname: switchName,
+		jstate: switchState
+	};
+
+	socket.emit('setSwitchState', sendata, (data) => {
+		this.setState({checked: data});
+		});
+
+  }
+
+  getServerSwitchState(switchName){
+	  
+	socket.emit('getServerSwitchState', switchName, (data) => { 
+       this.setState({checked: data});
+    });
+
+  }
+
   
   componentDidMount() {
-    this.postToServer(this.props.id,'','get');
+	this.getServerSwitchState(this.props.id);
   }
 
   constructor() {
     super();
+
     this.state = { checked: false };
     this.handleChange = this.handleChange.bind(this);
+    this.subscribeToUpdates((err, data) => {
+		if(this.props.id === data['jname']) this.setState({ checked: data['jstate']});
+	});
   }
-  
-  postToServer(switchName, switchState, switchAction){
-  
-    this.callBackendAPI(switchName, switchState, switchAction)
-      .then(res => this.setState({checked: (res.jstate === 'true')}))
-      .catch(err => console.log(err));
-
-  }
-
-  callBackendAPI = async (switchName, switchState, switchAction) => {
-  
-    var getUrl = '/express_backend?jname='+switchName + '&jstate='+switchState + '&jaction='+switchAction;
-    const response = await fetch(getUrl,{method: 'get', 
-	   headers: new Headers({
-		 'Authorization': btoa('0e3cbac3-d0dc-47ab-96aa-2785b0557346'), 
-		 'Content-Type': 'application/x-www-form-urlencoded'
-	   })});
-
-    var body;
-    if (response.status === 200) {
-
-      body = await response.json();
-    
-    } else{
-      body = {jstate: !this.state.checked};
-    }
-    return body;
-  };
  
  
-  handleChange(checked, event,id) {
+  handleChange(checkedEvent, event,id) {
 
-    this.postToServer(id,checked,'set');
-    
+	this.sendSwitchData(id, checkedEvent);
+
   }
  
   render() {
@@ -79,3 +84,4 @@ class ToggleSwitch extends Component {
 }
 
 export default (ToggleSwitch);
+

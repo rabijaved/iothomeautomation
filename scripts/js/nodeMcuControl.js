@@ -71,6 +71,12 @@ var self=module.exports = {
 
         if(jAction == '' || jAction == null) return [];
 
+		if(jAction == 'max') {
+
+            self.initalizeReadings();
+			res.send({ data: Math.round(self.humidReading)+","+Math.round(self.tempReading*10)/10 });
+		}
+		else {
         var myQuery = "SELECT TEMP,HUMID,strftime('%H:%M', DATECREATED) AS DATECREATED FROM AL_DHT11 WHERE DATECREATED >= '" + jAction +"' AND DATECREATED <= DATETIME('" + jAction +"','+1 day') ORDER BY DATECREATED ASC;";
 
         var timeArray =[];
@@ -84,7 +90,7 @@ var self=module.exports = {
             }, function(err, rows){ //callback for completion of .each method
                 res.send({ data: JSON.stringify([tempArray,humArray,timeArray]) });
             });
-        }catch(err){console.log("DB ERROR :getDHT11Data: " + err);}
+        }catch(err){console.log("DB ERROR :getDHT11Data: " + err);}}
     },
     getPlantData:async function (jAction,res){
 

@@ -1,6 +1,6 @@
 const express = require('express');
-const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
+
 
 //import scripts
 const backlightController = require('./scripts/js/backlightControl');
@@ -8,15 +8,49 @@ const switchController = require('./scripts/js/switchControl');
 const motionController = require('./scripts/js/motionControl');
 const nodeMcuController = require('./scripts/js/nodeMcuControl');
 
+const app = require('express')();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {'transports': ['websocket', 'polling']});
+
+
 //Initialize
 switchController.initializeSwitches(); //set all to off
 nodeMcuController.initalizeReadings();
 backlightController.piBacklightControlInitialize(); // Motion Sensor and Backlight Control
 
-// console.log that your server is up and running
-app.listen(port, () => console.log(`Listening on port ${port}`));
 
-// create a GET route
+// WebSocket handlers
+io.on('connection', (client) => {
+
+
+    console.log('Websocket: New connection from'+ client.request.connection.remoteAddress);
+  
+  
+    client.on('setSwitchState', function (data, fn) {
+		console.log('set: Recieved trigger for: ' + data['jname'] + ' ,State: ' + data['jstate'] + ', Websocket');
+		switchController.setSwitch(data['jname'],data['jstate']);
+		fn(data['jstate']);
+		client.broadcast.emit('setServerUpdate',data);
+    });
+  
+	client.on('getServerSwitchState', function (switchName, fn) {
+	
+		console.log('get: Recieved trigger for: ' + switchName + ', Websocket');
+		fn(switchController.getSwitchState(switchName));
+		
+	});
+	  
+  
+	client.on('disconnect', () => {
+		console.log('user disconnected');
+	})
+
+
+
+
+
+
+// HTTP GET route handler
 app.get('/express_backend', (req, res) => {
   var jName = req.query['jname'];
   var jState = req.query['jstate'];
@@ -39,14 +73,14 @@ app.get('/express_backend', (req, res) => {
 				case "mcuplant":
 					nodeMcuController.setMcuPlantData(jState);
 					break;
-				default:
-					switchController.setSwitch(jState, jName,res);
-					break;
 			}
 			break;
 		  //---------------------------GET------------------------------
 		  case "get":
 			switch(jName){
+				case "dht11": 
+					nodeMcuController.getDHT11Data('max', res);
+					break;
 				case "dht11graph": 
 					nodeMcuController.getDHT11Data(jState,res);
 					break;
@@ -59,9 +93,6 @@ app.get('/express_backend', (req, res) => {
 				case "mcuplantgraph_1":
 					nodeMcuController.getPlantData(jState,res);
 					break;
-				default:
-					jState = switchController.getState(jName,res);
-					break;
 			}
 			break;
 	  };
@@ -70,11 +101,24 @@ app.get('/express_backend', (req, res) => {
 	//It does not support authHeader token so handle it seperately
     console.log(jAction+': Recieved trigger for: ' + jName + ' ,State: ' + jState + ' ,Token: googleAssistant');
 	if(jAction == "set" && jName.match(/switch.*/)){
-		if(jState.toLowerCase().trim() == "on") jState = "false";
-		else if (jState.toLowerCase().trim() == "off") jState = "true";
+		if(jState.toLowerCase().trim() == "on") jState = false;
+		else if (jState.toLowerCase().trim() == "off") jState = true;
 		
-		switchController.setSwitch(jState, jName,res);
+		switchController.setSwitch(jName,jState);
+		
+			var sendata = {
+		jname: jName,
+		jstate: jState
+	};
+		
+		client.broadcast.emit('setServerUpdate',sendata);
 	}
 }
   
 });
+
+});
+
+// console.log that your server is up and running
+server.listen(port, () => console.log(`Listening on port ${port}`));
+
