@@ -1,5 +1,6 @@
 import React from "react";
 import AnalogClock, { Themes } from 'react-analog-clock';
+import Clock from 'react-live-clock';
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardIcon from "components/Card/CardIcon.jsx";
@@ -8,6 +9,7 @@ import GridItem from "components/Grid/GridItem.jsx";
 import GridContainer from "components/Grid/GridContainer.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import ToggleSwitch from "components/ToggleSwitch/ToggleSwitchPlus.jsx";
+import ReactFitText from 'react-fittext';
 
 class Dashboard extends React.Component {
 
@@ -79,17 +81,21 @@ class Dashboard extends React.Component {
     const classes = this.props;
     return (
       <Card style={{ marginTop: '-60px', backgroundColor: 'black', paddingBottom: '60px', marginLeft: '-10px' }}>
-        <GridContainer style={{ paddingLeft: '100px' }}>
-          <GridItem xs={8} sm={4} md={6}>
+        <GridContainer style={{ paddingLeft: '70px' }}>
+          <GridItem xs={12}></GridItem>
+          <GridItem xs={8}>
             <CardHeader>
             </CardHeader>
             <CardBody>
               <div style={{ marginLeft: '20px' }}>
-                <AnalogClock theme={Themes.dark} />
+                <ReactFitText compressor={0.7}>
+                  <h1><span style={{ fontWeight: '400', fontSize: '200px', color: 'white', marginTop: '0px' }}><Clock format={'h:mm'} ticking={true} /></span>
+                    <span style={{ fontSize: '50px', color: 'white' }}><Clock format={'a'} ticking={true} /></span></h1>
+                </ReactFitText>
               </div>
             </CardBody>
           </GridItem>
-          <GridItem xs={4} sm={6} md={6}>
+          <GridItem xs={4}>
             <CardHeader style={{ marginTop: '100px' }}>
               <GridItem xs={12} sm={12} md={6}>
                 <CardIcon color="warning">
@@ -101,7 +107,7 @@ class Dashboard extends React.Component {
               </GridItem>
             </CardHeader>
           </GridItem>
-          <GridItem xs={8} sm={4} md={3} style={{ marginTop: '25px' }}>
+          <GridItem xs={4} style={{ marginBottom: '-30px' }}>
             <CardHeader>
               <CardIcon color="warning">
                 <Icon>info_outline</Icon>
@@ -114,7 +120,7 @@ class Dashboard extends React.Component {
               </div>
             </CardHeader>
           </GridItem>
-          <GridItem xs={8} sm={4} md={3} style={{ marginTop: '25px' }}>
+          <GridItem xs={4} style={{ marginBottom: '-30px' }}>
             <CardHeader>
               <CardIcon color="success">
                 <Icon>info_outline</Icon>
@@ -127,11 +133,13 @@ class Dashboard extends React.Component {
               </div>
             </CardHeader>
           </GridItem>
+
         </GridContainer>
-      </Card>
+      </Card >
     );
   }
 }
 
 
 export default (Dashboard);
+

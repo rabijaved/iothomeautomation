@@ -7,7 +7,7 @@ import BrightnessMedium from "@material-ui/icons/BrightnessMedium";
 // import ContentPaste from "@material-ui/icons/ContentPaste";
 import Notifications from "@material-ui/icons/Notifications";
 // core components/views
-import DashboardPage from "views/Dashboard/Dashboard.jsx";
+import DashboardPage from "views/Dashboard/Dashboard2.jsx"; //switchable, change to Dashboard.jsx
 import Switch from "views/Switch/Switch.jsx";
 import DHT11 from "views/DHT11/DHT11.jsx";
 import Motion from "views/Motion/Motion.jsx";
@@ -29,31 +29,35 @@ const dashboardRoutes = [
     icon: Notifications,
     component: DHT11
   },
-  { path: "/switch",
+  {
+    path: "/switch",
     sidebarName: "Switch",
     navbarName: "Switch",
     icon: Copyright,
     component: Switch
   },
-  { path: "/motion",
+  {
+    path: "/motion",
     sidebarName: "Motion",
     navbarName: "Motion",
     icon: Home,
     component: Motion
   },
-  { path: "/ambLight",
+  {
+    path: "/ambLight",
     sidebarName: "Light Intensity",
     navbarName: "Light Intensity",
     icon: BrightnessMedium,
     component: AmbLight
   },
-  { path: "/plant",
+  {
+    path: "/plant",
     sidebarName: "Soil Moisture",
     navbarName: "Soil Moisture",
     icon: PlantIcon,
     component: Plant1
   },
-  { redirect: true, path: "/", to: "/dashboard", mobile: "/switch" ,navbarName: "Redirect" }
+  { redirect: true, path: "/", to: "/dashboard", mobile: "/switch", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;

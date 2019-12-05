@@ -36,60 +36,60 @@ function Switch(props) {
       <GridContainer>
         <GridItem xs={12} sm={12} md={3}>
           <Card>
-              <CardHeader>
+            <CardHeader>
               <GridItem>
                 <CardIcon color="warning">
                   <Icon>content_copy</Icon>
                 </CardIcon>
-                </GridItem>
-                <GridItem>
-                <ToggleSwitch name="Switch 1" id="switch1"/>
-                </GridItem>
-              </CardHeader>
+              </GridItem>
+              <GridItem>
+                <ToggleSwitch name="Switch 1" id="switch1" />
+              </GridItem>
+            </CardHeader>
           </Card>
         </GridItem>
         <GridItem xs={12} sm={12} md={3}>
           <Card>
-              <CardHeader>
+            <CardHeader>
               <GridItem>
                 <CardIcon color="success">
                   <Icon>content_copy</Icon>
                 </CardIcon>
-                </GridItem>
-                <GridItem>
-                <ToggleSwitch name="Switch 2" id="switch2"/>
-                </GridItem>
-              </CardHeader>
+              </GridItem>
+              <GridItem>
+                <ToggleSwitch name="Switch 2" id="switch2" />
+              </GridItem>
+            </CardHeader>
           </Card>
         </GridItem>
       </GridContainer>
       <GridContainer>
         <GridItem xs={12} sm={12} md={3}>
           <Card>
-              <CardHeader>
+            <CardHeader>
               <GridItem>
                 <CardIcon color="danger">
                   <Icon>content_copy</Icon>
                 </CardIcon>
-                </GridItem>
-                <GridItem>
-                <ToggleSwitch name="Switch 3" id="switch3"/>
-                </GridItem>
-              </CardHeader>
+              </GridItem>
+              <GridItem>
+                <ToggleSwitch name="Switch 3" id="switch3" />
+              </GridItem>
+            </CardHeader>
           </Card>
         </GridItem>
         <GridItem xs={12} sm={12} md={3}>
           <Card>
-              <CardHeader>
+            <CardHeader>
               <GridItem>
                 <CardIcon color="info">
                   <Icon>content_copy</Icon>
                 </CardIcon>
-                </GridItem>
-                <GridItem>
-                <ToggleSwitch name="Switch 4" id="switch4"/>
-                </GridItem>
-              </CardHeader>
+              </GridItem>
+              <GridItem>
+                <ToggleSwitch name="Switch 4" id="switch4" />
+              </GridItem>
+            </CardHeader>
           </Card>
         </GridItem>
       </GridContainer>
