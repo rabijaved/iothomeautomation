@@ -81,21 +81,21 @@ class Dashboard extends React.Component {
     const classes = this.props;
     return (
       <Card style={{ marginTop: '-60px', backgroundColor: 'black', paddingBottom: '60px', marginLeft: '-10px' }}>
-        <GridContainer style={{ paddingLeft: '70px' }}>
+        <GridContainer style={{ paddingLeft: '70px', marginLeft: '400px', marginRight: '400px' }}>
           <GridItem xs={12}></GridItem>
-          <GridItem xs={8}>
+          <GridItem xs={7}>
             <CardHeader>
             </CardHeader>
             <CardBody>
               <div style={{ marginLeft: '20px' }}>
-                <ReactFitText compressor={0.7}>
-                  <h1><span style={{ fontWeight: '400', fontSize: '200px', color: 'white', marginTop: '0px' }}><Clock format={'h:mm'} ticking={true} /></span>
+                <ReactFitText compressor={0.5}>
+                  <h1><span style={{ fontWeight: '400', fontSize: '176px', color: 'white', marginTop: '0px' }}><Clock format={'h:mm'} ticking={true} /></span>
                     <span style={{ fontSize: '50px', color: 'white' }}><Clock format={'a'} ticking={true} /></span></h1>
                 </ReactFitText>
               </div>
             </CardBody>
           </GridItem>
-          <GridItem xs={4}>
+          <GridItem xs={5}>
             <CardHeader style={{ marginTop: '100px' }}>
               <GridItem xs={12} sm={12} md={6}>
                 <CardIcon color="warning">

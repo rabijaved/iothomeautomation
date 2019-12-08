@@ -24,7 +24,7 @@ io.on('connection', (client) => {
 		console.log('set: Recieved trigger for: ' + data['jname'] + ' ,State: ' + data['jstate'] + ', Websocket');
 		switchController.setSwitch(data['jname'], data['jstate']);
 		fn(data['jstate']);
-		client.broadcast.emit('setServerUpdate', data);
+		io.emit('setServerUpdate', data);
 	});
 
 	client.on('getServerSwitchState', function (switchName, fn) {
@@ -98,7 +98,7 @@ io.on('connection', (client) => {
 					jstate: jState
 				};
 
-				client.broadcast.emit('setServerUpdate', sendata);
+				io.emit('setServerUpdate', sendata);
 			}
 		}
 
